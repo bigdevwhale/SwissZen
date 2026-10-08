@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Tabs -->
     <string name="tab_home">Главная</string>
@@ -72,7 +72,13 @@
     <string name="paused">Пауза</string>
     <string name="session_complete">Сессия завершена.</string>
     <string name="pattern">ритм</string>
-    <string name="seconds">секунд</string>
+    <!-- Unit word only: the number is shown separately, large, above it. -->
+    <plurals name="seconds_unit" tools:ignore="ImpliedQuantity">
+        <item quantity="one">секунда</item>
+        <item quantity="few">секунды</item>
+        <item quantity="many">секунд</item>
+        <item quantity="other">секунды</item>
+    </plurals>
     <string name="well_done_short">отлично</string>
     <string name="session_length">Длительность</string>
     <string name="remaining">Осталось</string>

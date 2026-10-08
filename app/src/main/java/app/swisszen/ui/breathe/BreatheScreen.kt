@@ -141,9 +141,21 @@ class GuidedState {
     var engine by mutableStateOf<GuidedPaceEngine?>(null)
     var running by mutableStateOf(false)
     var finished by mutableStateOf(false)
-    var tick by mutableIntStateOf(0)       // bumps every engine second to recompose
     var startedAt by mutableLongStateOf(0L)
-    val sessionLeft get() = engine?.sessionLeft ?: if (finished) 0 else minutes * 60
+
+    // Observable mirror of the (plain) engine, refreshed every second by [sync] — the UI reads these,
+    // never the engine fields, otherwise Compose would not notice phase changes.
+    var phase by mutableIntStateOf(0)
+    var left by mutableIntStateOf(0)
+    var phaseCount by mutableIntStateOf(0)   // increments on every new phase, keys the orb animation
+    private var engineSessionLeft by mutableIntStateOf(0)
+    val sessionLeft get() = if (engine != null) engineSessionLeft else if (finished) 0 else minutes * 60
+
+    fun sync(newPhase: Boolean = false) {
+        val e = engine ?: return
+        phase = e.phase; left = e.left; engineSessionLeft = e.sessionLeft
+        if (newPhase) phaseCount++
+    }
 
     fun stop(vm: BreatheViewModel) {
         engine?.let { e -> if (!finished) vm.log(SessionLog.GUIDED, startedAt, minutes * 60 - e.sessionLeft, preset.name.lowercase()) }
@@ -174,7 +186,7 @@ private fun ColumnScope.GuidedPanel(g: GuidedState, vm: BreatheViewModel, settin
         while (g.running) {
             delay(1000)
             val newPhase = e.tickSecond()
-            g.tick++
+            g.sync(newPhase)
             if (e.done) {
                 vm.log(SessionLog.GUIDED, g.startedAt, g.minutes * 60, g.preset.name.lowercase())
                 toast(doneMsg)
@@ -188,13 +200,14 @@ private fun ColumnScope.GuidedPanel(g: GuidedState, vm: BreatheViewModel, settin
     // Orb follows the phase: grow on inhale, shrink on exhale, stay put on holds.
     // Re-runs on every phase change and on pause/resume (resuming animates over the seconds left).
     val e = g.engine
-    LaunchedEffect(e, e?.phase, g.running) {
+    LaunchedEffect(e, g.phaseCount, g.running) {
         if (e == null) { if (g.finished) orb.animateTo(0.6f, tween(2000)) else orb.stop(); return@LaunchedEffect }
         if (!g.running) { orb.stop(); return@LaunchedEffect }
-        val target = if (e.phase == 0 || e.phase == 1) 1f else G_MIN
-        if (e.phase == 0 || e.phase == 2) {
-            vm.breath(e.phase == 0, e.left.toDouble())
-            orb.animateTo(target, tween(e.left * 1000, easing = breathEase))
+        val phase = g.phase
+        val target = if (phase == 0 || phase == 1) 1f else G_MIN
+        if (phase == 0 || phase == 2) {
+            vm.breath(phase == 0, g.left.toDouble())
+            orb.animateTo(target, tween(g.left * 1000, easing = breathEase))
         } else orb.snapTo(target)
     }
 
@@ -219,13 +232,14 @@ private fun ColumnScope.GuidedPanel(g: GuidedState, vm: BreatheViewModel, settin
         Orb(Modifier.fillMaxSize(), if (active) orb.value else if (g.finished) orb.value else idleScale)
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             val big = when {
-                e != null -> "${e.left}"
+                e != null -> "${g.left}"
                 g.finished -> "—"
                 else -> g.preset.label
             }
             Text(big, style = ZenType.BigNumber.copy(fontSize = if (e != null) 60.sp else 40.sp))
             Text(
-                stringResource(if (e != null) R.string.seconds else if (g.finished) R.string.well_done_short else R.string.pattern).uppercase(),
+                (if (e != null) pluralStringResource(R.plurals.seconds_unit, g.left)
+                else stringResource(if (g.finished) R.string.well_done_short else R.string.pattern)).uppercase(),
                 style = ZenType.Unit, modifier = Modifier.padding(top = 4.dp),
             )
         }
@@ -233,14 +247,14 @@ private fun ColumnScope.GuidedPanel(g: GuidedState, vm: BreatheViewModel, settin
     val label = when {
         e == null -> stringResource(if (g.finished) R.string.session_complete else R.string.ready)
         !g.running -> stringResource(R.string.paused)
-        else -> stringResource(listOf(R.string.phase_in, R.string.phase_hold, R.string.phase_out, R.string.phase_hold)[e.phase])
+        else -> stringResource(listOf(R.string.phase_in, R.string.phase_hold, R.string.phase_out, R.string.phase_hold)[g.phase])
     }
     Text(label, style = ZenType.Phase, modifier = Modifier.fillMaxWidth().heightIn(min = 32.dp), textAlign = androidx.compose.ui.text.style.TextAlign.Center)
     Row(Modifier.fillMaxWidth().padding(top = 12.dp, bottom = 22.dp), horizontalArrangement = Arrangement.Center) {
         val shorts = listOf(R.string.phase_in_short, R.string.phase_hold_short, R.string.phase_out_short, R.string.phase_hold_short)
         pattern.forEachIndexed { i, s ->
             if (s > 0) {
-                val on = e != null && e.phase == i
+                val on = e != null && g.phase == i
                 Text(
                     stringResource(R.string.phase_chip, stringResource(shorts[i]), s), fontFamily = Inter, fontSize = 12.sp,
                     fontWeight = if (on) FontWeight.Medium else FontWeight.Normal,
@@ -273,6 +287,7 @@ private fun ColumnScope.GuidedPanel(g: GuidedState, vm: BreatheViewModel, settin
             e == null -> {
                 g.finished = false
                 g.engine = GuidedPaceEngine(g.preset, g.minutes)
+                g.sync(newPhase = true)
                 g.startedAt = System.currentTimeMillis()
                 g.running = true
                 scope.launch { orb.snapTo(G_MIN) }
