@@ -99,15 +99,7 @@ cd SwissZen
 ### CI / releases
 
 - **Android CI** (`.github/workflows/android.yml`) — on every push and PR: unit tests, lint (missing translations fail the build), debug APK uploaded as an artifact.
-- **Release** (`.github/workflows/release.yml`) — push a tag like `v1.0.0` (or run it manually) to build a release APK and publish it as a GitHub Release.
-  To sign with your own key, add these repository secrets; without them the APK is signed with the CI debug key:
-
-  | Secret | Value |
-  |---|---|
-  | `SIGNING_KEYSTORE_BASE64` | `base64 -w0 release.jks` |
-  | `SIGNING_STORE_PASSWORD` | keystore password |
-  | `SIGNING_KEY_ALIAS` | key alias |
-  | `SIGNING_KEY_PASSWORD` | key password |
+- **Release** (`.github/workflows/release.yml`) — push a tag like `v1.0.0` (or run it manually) to build a signed release APK and publish it as a GitHub Release.
 
 ## License
 

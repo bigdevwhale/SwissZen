@@ -67,7 +67,7 @@ cd SwissZen
 ./gradlew testDebugUnitTest assembleDebug
 ```
 
-Подробности о стеке, CI и подписи релизов — в [английском README](README.md#under-the-hood).
+Подробности о стеке и CI — в [английском README](README.md#under-the-hood).
 
 ## Лицензия
 
