@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="120" height="120" viewBox="0 0 30 30" role="img" aria-label="SwissZen">
+  <rect width="30" height="30" rx="9" fill="#E30613"/>
+  <rect x="7" y="12.6" width="16" height="5" rx="1" fill="#fff"/>
+  <rect x="12.5" y="15" width="5" height="8" rx="1" fill="#fff"/>
+  <path d="M15 15.2C11.6 13.2 11.7 8.6 15 5.6c3.3 3 3.4 7.6 0 9.6z" fill="#fff"/>
+  <path d="M15 14.4V8.2" stroke="#E30613" stroke-width="1" stroke-linecap="round"/>
+</svg>

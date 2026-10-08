@@ -1,0 +1,419 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name" translatable="false">SwissZen</string>
+
+    <!-- Tabs -->
+    <string name="tab_home">Home</string>
+    <string name="tab_breathe">Breathe</string>
+    <string name="tab_bell">Bell</string>
+    <string name="tab_practices">Practices</string>
+    <string name="tab_journal">Journal</string>
+
+    <!-- Common -->
+    <string name="back">Back</string>
+    <string name="next">Next</string>
+    <string name="finish">Finish</string>
+    <string name="exit">Exit</string>
+    <string name="start">Start</string>
+    <string name="pause">Pause</string>
+    <string name="resume">Resume</string>
+    <string name="done">Done</string>
+    <string name="end">End</string>
+    <string name="skip">Skip</string>
+    <string name="again">Again</string>
+    <string name="save">Save</string>
+    <string name="today">Today</string>
+    <string name="yesterday">Yesterday</string>
+    <plurals name="minutes_short">
+        <item quantity="one">%d min</item>
+        <item quantity="other">%d min</item>
+    </plurals>
+    <plurals name="days_streak">
+        <item quantity="one">%d-day streak</item>
+        <item quantity="other">%d-day streak</item>
+    </plurals>
+
+    <!-- Home -->
+    <string name="greet_morning">Good morning</string>
+    <string name="greet_afternoon">Good afternoon</string>
+    <string name="greet_evening">Good evening</string>
+    <string name="home_title">Open the knife.</string>
+    <string name="home_sub">Pick one tool. A minute is enough.</string>
+    <string name="tool_breathe_purpose">Paced breathing or Wim Hof rounds.</string>
+    <string name="tool_bell_purpose">A soft chime that brings you back.</string>
+    <string name="tool_practices_purpose">Short pauses and meditations, 1–20 min.</string>
+    <string name="tool_journal_purpose">One line on what you notice today.</string>
+    <string name="last_used">Last used · %1$s</string>
+    <string name="last_rang">Last rang · %1$s</string>
+    <string name="last_entry">Last entry · %1$s</string>
+    <string name="never_used">Not tried yet</string>
+    <string name="stat_breathed">breathed</string>
+    <string name="stat_bells">bells heard</string>
+    <string name="stat_lines">lines written</string>
+
+    <!-- Breathe: guided -->
+    <string name="breathe_title">Breathe</string>
+    <string name="method_guided">Guided pace</string>
+    <string name="method_wimhof">Wim Hof</string>
+    <string name="preset_box">Box</string>
+    <string name="preset_calm">Calm</string>
+    <string name="preset_coherent">Coherent</string>
+    <string name="phase_in">Breathe in…</string>
+    <string name="phase_hold">Hold…</string>
+    <string name="phase_out">Breathe out…</string>
+    <string name="phase_in_short">In</string>
+    <string name="phase_hold_short">Hold</string>
+    <string name="phase_out_short">Out</string>
+    <string name="phase_chip">%1$s %2$ds</string>
+    <string name="ready">Ready when you are.</string>
+    <string name="paused">Paused</string>
+    <string name="session_complete">Session complete.</string>
+    <string name="pattern">pattern</string>
+    <string name="seconds">seconds</string>
+    <string name="well_done_short">well done</string>
+    <string name="session_length">Session length</string>
+    <string name="remaining">Remaining</string>
+    <string name="start_again">Start again</string>
+
+    <!-- Breathe: Wim Hof setup -->
+    <string name="wh_intro">Power breathing in rounds. Pick a level.</string>
+    <string name="wh_beginner">Beginner</string>
+    <string name="wh_medium">Medium</string>
+    <string name="wh_medium_tag">classic</string>
+    <string name="wh_advanced">Advanced</string>
+    <string name="wh_expert">Expert</string>
+    <string name="wh_pace_beginner">Slow, smooth</string>
+    <string name="wh_pace_medium">Moderate, rhythmic</string>
+    <string name="wh_pace_advanced">Energetic, deep</string>
+    <string name="wh_pace_expert">Intense, fast</string>
+    <string name="wh_level_meta">%1$s · %2$s</string>
+    <plurals name="wh_rounds">
+        <item quantity="one">%d round</item>
+        <item quantity="other">%d rounds</item>
+    </plurals>
+    <string name="wh_breaths_range">%1$s breaths</string>
+    <string name="wh_rounds_word">rounds</string>
+    <string name="wh_fewer_rounds">Fewer rounds</string>
+    <string name="wh_more_rounds">More rounds</string>
+    <string name="wh_safety">Always sit or lie down. Feeling dizzy or tingly is normal. Never practice in or near water, or while driving.</string>
+    <string name="wh_spec_rounds">Rounds</string>
+    <string name="wh_spec_breaths">Breaths per round</string>
+    <string name="wh_spec_pace">Pace</string>
+    <string name="wh_spec_tempo">One breath</string>
+    <string name="wh_spec_tempo_value">in %1$s s · out %2$s s</string>
+    <string name="wh_spec_session">Session</string>
+    <string name="wh_spec_session_value">~%1$d min</string>
+    <string name="wh_ladder">Breath-hold targets, round by round</string>
+    <string name="wh_start">Start session</string>
+
+    <!-- Breathe: Wim Hof session -->
+    <string name="wh_round_of">Round %1$d of %2$d</string>
+    <string name="wh_sound">Breath sounds</string>
+    <string name="wh_get_comfortable">Get comfortable</string>
+    <string name="wh_get_comfortable_hint">Sit or lie down. Relax your shoulders and jaw.</string>
+    <string name="wh_round_n">Round %1$d</string>
+    <string name="wh_round_n_hint">Here we go again. Same rhythm.</string>
+    <string name="wh_fully_in">Fully in</string>
+    <string name="wh_fully_in_hint">Deep into the belly, then the chest.</string>
+    <string name="wh_let_go">Let go</string>
+    <string name="wh_let_go_hint">Don’t push the air out. Just release.</string>
+    <string name="wh_last_in">Last breath — fully in</string>
+    <string name="wh_last_out">And let it all go</string>
+    <string name="wh_last_out_hint">Then hold, with empty lungs.</string>
+    <string name="wh_hold">Hold</string>
+    <string name="wh_hold_hint">Lungs empty, body relaxed. Breathe in when you feel the urge.</string>
+    <string name="wh_hold_past_hint">Past your target. Breathe in whenever you’re ready.</string>
+    <string name="wh_recovery">Recovery breath</string>
+    <string name="wh_recovery_hint">Breathe in fully.</string>
+    <string name="wh_hold_it">Hold it</string>
+    <string name="wh_hold_it_hint">Chest full. Gently squeeze the breath up.</string>
+    <string name="wh_next_round">Next round coming up.</string>
+    <string name="wh_last_round">That was the last round.</string>
+    <string name="wh_paused_hint">Resume when you’re ready.</string>
+    <string name="wh_breathe_in">Breathe in</string>
+    <string name="wh_get_ready">get ready</string>
+    <string name="wh_round_lower">round %1$d</string>
+    <string name="wh_of">of %1$d</string>
+    <string name="wh_last_breath">last breath</string>
+    <string name="wh_target">target %1$s</string>
+    <string name="wh_past_target">past target %1$s</string>
+    <string name="wh_hold_unit">hold</string>
+    <string name="wh_well_done">Well done.</string>
+    <string name="wh_well_done_hint">Notice how you feel. Take your time getting up.</string>
+    <string name="wh_sum_rounds">rounds</string>
+    <string name="wh_sum_longest">longest hold</string>
+    <string name="wh_sum_total">total time</string>
+    <string name="wh_sum_round">Round %1$d</string>
+    <string name="wh_sum_note">Red mark is the round’s target. Holds get easier with practice — never force them.</string>
+
+    <!-- Bell -->
+    <string name="bell_title">Bell</string>
+    <string name="bell_name">Mindfulness bell</string>
+    <string name="bell_off">Off — no bells until you turn it on</string>
+    <string name="bell_next_in">Next bell in about %1$d min</string>
+    <string name="bell_next_at">Next bell at %1$s</string>
+    <string name="bell_add_time_first">Add a time to schedule a bell</string>
+    <string name="bell_when">When it rings</string>
+    <string name="bell_mode_random">Random</string>
+    <string name="bell_mode_interval">Interval</string>
+    <string name="bell_mode_times">Set times</string>
+    <string name="bell_random_desc">A bell at an unpredictable moment, every %1$d–%2$d min.</string>
+    <string name="bell_interval_desc">Ring every</string>
+    <string name="bell_times_desc">Ring at these times</string>
+    <string name="bell_add_time">+ Add time</string>
+    <string name="bell_remove_time">Remove %1$s</string>
+    <string name="bell_quiet">Quiet hours</string>
+    <string name="bell_quiet_title">No bells overnight</string>
+    <string name="bell_quiet_desc">The bell stays silent in this window.</string>
+    <string name="bell_from">From</string>
+    <string name="bell_until">Until</string>
+    <string name="bell_preview">Preview bell</string>
+    <string name="bell_preview_toast">Bell preview — one soft chime.</string>
+    <string name="bell_recent">Recent bells</string>
+    <string name="bell_no_history">No bells yet. Turn the bell on and it will gently find you.</string>
+    <string name="bell_missed">Not answered</string>
+    <string name="bell_paused">Paused</string>
+    <string name="bell_add_note">Add a note</string>
+    <string name="bell_note_hint">What did you notice?</string>
+    <string name="bell_notif_title">Pause for a breath</string>
+    <string name="bell_notif_text">What is happening right now — in your body, around you?</string>
+    <string name="bell_notif_action">I paused</string>
+    <string name="bell_channel">Mindfulness bell</string>
+    <string name="bell_channel_desc">The gentle chime that reminds you to pause.</string>
+    <string name="bell_need_permission">Allow notifications so the bell can ring.</string>
+    <string name="bell_allow">Allow</string>
+
+    <!-- Practices -->
+    <string name="practices_title">Practices</string>
+    <string name="practices_sub">Short guided pauses, and longer sits when you have the time.</string>
+    <string name="micro_practices">Micro-practices</string>
+    <string name="micro_range">1–5 min</string>
+    <string name="meditations">Meditations</string>
+    <string name="meditations_range">5–20 min</string>
+    <string name="guided">%1$s · guided</string>
+    <string name="timed">%1$s · timed</string>
+    <string name="step_of">Step %1$d of %2$d</string>
+    <string name="part_of">Part %1$d of %2$d</string>
+    <string name="practice_complete">Practice complete.</string>
+    <string name="practice_complete_hint">Take this pace with you into the next thing you do.</string>
+    <string name="repeat">Repeat</string>
+    <string name="back_to_practices">Back to practices</string>
+    <string name="sit_complete">Sit complete.</string>
+    <string name="sat_for">You sat for %1$s.</string>
+    <string name="brief_sit">A brief sit, well begun.</string>
+
+    <string name="p_grounding">5-4-3-2-1 grounding</string>
+    <string name="p_grounding_desc">Come back to the room through your senses.</string>
+    <string-array name="p_grounding_heads">
+        <item>Name 5 things you can see.</item>
+        <item>Notice 4 things you can feel.</item>
+        <item>Listen for 3 things you can hear.</item>
+        <item>Find 2 things you can smell.</item>
+        <item>Notice 1 thing you can taste.</item>
+        <item>Take one slow breath.</item>
+    </string-array>
+    <string-array name="p_grounding_hints">
+        <item>Let your eyes move slowly. A colour, an edge, a shadow.</item>
+        <item>Your feet on the floor, fabric on your skin, the air temperature.</item>
+        <item>Near sounds first, then the faraway ones.</item>
+        <item>If nothing comes, recall a smell you like.</item>
+        <item>Or simply notice the inside of your mouth.</item>
+        <item>Notice how you feel now, compared to three minutes ago.</item>
+    </string-array>
+
+    <string name="p_scan">Body scan</string>
+    <string name="p_scan_desc">Move attention slowly from feet to crown.</string>
+    <string-array name="p_scan_heads">
+        <item>Settle into your seat.</item>
+        <item>Bring attention to your feet.</item>
+        <item>Move up through your legs.</item>
+        <item>Rest attention on belly and chest.</item>
+        <item>Notice shoulders, arms and hands.</item>
+        <item>Soften jaw, eyes and forehead.</item>
+    </string-array>
+    <string-array name="p_scan_hints">
+        <item>Let your hands rest. Close your eyes if that feels fine.</item>
+        <item>Weight, warmth, pressure. No need to change anything.</item>
+        <item>Calves, knees, thighs. Notice where they touch the chair.</item>
+        <item>Feel them rise and fall on their own.</item>
+        <item>If the shoulders are lifted, let them drop.</item>
+        <item>Then sense the whole body at once, sitting here.</item>
+    </string-array>
+
+    <string name="p_three">Notice three things</string>
+    <string name="p_three_desc">Find three details you hadn’t seen before.</string>
+    <string-array name="p_three_heads">
+        <item>Look for something you usually ignore.</item>
+        <item>Find a second detail.</item>
+        <item>Find a third.</item>
+    </string-array>
+    <string-array name="p_three_hints">
+        <item>A texture, a crack, a reflection.</item>
+        <item>Look closer than you normally would.</item>
+        <item>Then take a breath and return to what you were doing.</item>
+    </string-array>
+
+    <string name="p_start">Start-of-day pause</string>
+    <string name="p_start_desc">Set one intention before the day starts.</string>
+    <string-array name="p_start_heads">
+        <item>Pause before you pick up your phone.</item>
+        <item>Notice how you’re arriving today.</item>
+        <item>Choose one intention.</item>
+        <item>Carry it into the first task.</item>
+    </string-array>
+    <string-array name="p_start_hints">
+        <item>Sit or stand still for three breaths.</item>
+        <item>Rested, tired, restless — just name it.</item>
+        <item>A few words. “Go slowly.” “Listen first.”</item>
+        <item>You can come back to it whenever the bell rings.</item>
+    </string-array>
+
+    <string name="p_gratitude">Gratitude minute</string>
+    <string name="p_gratitude_desc">Name one thing that went right.</string>
+    <string-array name="p_gratitude_heads">
+        <item>Think of one thing that went right today.</item>
+        <item>Recall it in detail.</item>
+        <item>Let yourself stay with it.</item>
+    </string-array>
+    <string-array name="p_gratitude_hints">
+        <item>Small counts. Coffee, a message, the light.</item>
+        <item>Where you were, who was there, what it felt like.</item>
+        <item>For three breaths, nothing else to do.</item>
+    </string-array>
+
+    <string name="m_anchor">Breath anchor</string>
+    <string name="m_anchor_desc">Stay with the breath, return when you wander.</string>
+    <string-array name="m_anchor_titles">
+        <item>Settle in</item>
+        <item>Arrive at the breath</item>
+        <item>Mind wandered?</item>
+        <item>Deepen</item>
+        <item>Return</item>
+    </string-array>
+    <string-array name="m_anchor_hints">
+        <item>Find a posture you can rest in.</item>
+        <item>One breath at a time, all the way through.</item>
+        <item>Notice it, then come back. That is the practice.</item>
+        <item>Softer breath, quieter mind.</item>
+        <item>Sounds, body, room.</item>
+    </string-array>
+
+    <string name="m_kindness">Loving-kindness</string>
+    <string name="m_kindness_desc">Wish well, starting with yourself.</string>
+    <string-array name="m_kindness_titles">
+        <item>Settle</item>
+        <item>For yourself</item>
+        <item>Someone dear</item>
+        <item>A neutral face</item>
+        <item>Someone difficult</item>
+        <item>Let it widen</item>
+    </string-array>
+    <string-array name="m_kindness_hints">
+        <item>Rest easy, eyes soft.</item>
+        <item>May I be well. May I be at ease.</item>
+        <item>Picture them and wish them the same.</item>
+        <item>The barista, a neighbour, a stranger.</item>
+        <item>Gently, without forcing it.</item>
+        <item>Everyone, held kindly.</item>
+    </string-array>
+
+    <string name="m_mountain">Mountain sit</string>
+    <string name="m_mountain_desc">Steady and unmoved, whatever passes.</string>
+    <string-array name="m_mountain_titles">
+        <item>Sit like a mountain</item>
+        <item>Weather arrives</item>
+        <item>Nothing to fix</item>
+        <item>Simply steady</item>
+        <item>Melt back</item>
+    </string-array>
+    <string-array name="m_mountain_hints">
+        <item>Broad base, tall spine, still.</item>
+        <item>Thoughts, sounds, moods — passing clouds.</item>
+        <item>The mountain does not chase the weather.</item>
+        <item>Just sitting. Just this.</item>
+        <item>From rock to body again.</item>
+    </string-array>
+
+    <string name="m_walking">Walking meditation</string>
+    <string name="m_walking_desc">Each step, fully arrived.</string>
+    <string-array name="m_walking_titles">
+        <item>Stand still first</item>
+        <item>Slow steps</item>
+        <item>Turn with care</item>
+        <item>Find the rhythm</item>
+        <item>The world walking</item>
+        <item>Arrive</item>
+    </string-array>
+    <string-array name="m_walking_hints">
+        <item>Feel both feet before you move.</item>
+        <item>Lift, move, place. Know each one.</item>
+        <item>Pause at the end of your line.</item>
+        <item>Let the pace find itself.</item>
+        <item>Air on skin, sounds coming and going.</item>
+        <item>Stop, stand, three full breaths.</item>
+    </string-array>
+
+    <string name="m_sleep">Sleep wind-down</string>
+    <string name="m_sleep_desc">Heavy, warm, and done for today.</string>
+    <string-array name="m_sleep_titles">
+        <item>Lie down</item>
+        <item>Body release</item>
+        <item>Count the breath</item>
+        <item>The day, thanked</item>
+        <item>Nothing left to do</item>
+    </string-array>
+    <string-array name="m_sleep_hints">
+        <item>Let your weight drop into the bed.</item>
+        <item>From the toes upward — heavy and warm.</item>
+        <item>In, one… out, two… up to ten, then begin again.</item>
+        <item>Let images drift past unopened.</item>
+        <item>Nowhere to get to. Rest.</item>
+    </string-array>
+
+    <!-- Journal -->
+    <string name="journal_title">Journal</string>
+    <string name="todays_prompt">Today’s prompt</string>
+    <string name="another_prompt">Another prompt</string>
+    <string name="journal_placeholder">One line is enough…</string>
+    <string name="journal_rule">One line, no editing.</string>
+    <string name="journal_count">%1$d / %2$d</string>
+    <string name="journal_write_first">Write one line first.</string>
+    <string name="journal_saved">Saved.</string>
+    <string name="journal_day_streak">day streak</string>
+    <string name="journal_echo">Echo — from a past week</string>
+    <string name="journal_echo_when">%1$s · %2$s</string>
+    <plurals name="weeks_ago">
+        <item quantity="one">%d week ago</item>
+        <item quantity="other">%d weeks ago</item>
+    </plurals>
+    <string name="journal_recent">Recent lines</string>
+    <string name="journal_empty">Your lines will collect here. Start with today’s prompt.</string>
+    <string name="journal_today_at">Today, %1$s</string>
+    <string-array name="journal_prompts">
+        <item>What do I notice right now?</item>
+        <item>What is one sound I can hear?</item>
+        <item>Where do I feel today in my body?</item>
+        <item>What went quietly well today?</item>
+        <item>What can I let be as it is?</item>
+        <item>What am I holding on to?</item>
+        <item>What am I rushing past?</item>
+    </string-array>
+
+    <!-- Settings -->
+    <string name="settings_title">Settings</string>
+    <string name="settings_language">Language</string>
+    <string name="lang_system">System default</string>
+    <string name="lang_en" translatable="false">English</string>
+    <string name="lang_ru" translatable="false">Русский</string>
+    <string name="settings_feedback">Sound &amp; haptics</string>
+    <string name="settings_sound">Breath sounds</string>
+    <string name="settings_sound_desc">A soft rising and falling hush that follows your breath.</string>
+    <string name="settings_haptics">Haptics</string>
+    <string name="settings_haptics_desc">A light tick when the breathing phase changes.</string>
+    <string name="settings_notifications">Notifications</string>
+    <string name="settings_notifications_on">Allowed — the bell can ring.</string>
+    <string name="settings_notifications_off">Not allowed — the bell stays silent.</string>
+    <string name="settings_about">About</string>
+    <string name="settings_about_text">SwissZen %1$s · made for small, quiet pauses.</string>
+    <string name="settings_disclaimer">Breathing exercises are not medical treatment. If you have a heart condition, epilepsy, are pregnant or unsure, talk to a doctor before Wim Hof breathing.</string>
+</resources>

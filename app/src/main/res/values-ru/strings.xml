@@ -1,0 +1,424 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Tabs -->
+    <string name="tab_home">Главная</string>
+    <string name="tab_breathe">Дыхание</string>
+    <string name="tab_bell">Колокол</string>
+    <string name="tab_practices">Практики</string>
+    <string name="tab_journal">Дневник</string>
+
+    <!-- Common -->
+    <string name="back">Назад</string>
+    <string name="next">Далее</string>
+    <string name="finish">Завершить</string>
+    <string name="exit">Выйти</string>
+    <string name="start">Начать</string>
+    <string name="pause">Пауза</string>
+    <string name="resume">Продолжить</string>
+    <string name="done">Готово</string>
+    <string name="end">Стоп</string>
+    <string name="skip">Пропустить</string>
+    <string name="again">Ещё раз</string>
+    <string name="save">Сохранить</string>
+    <string name="today">Сегодня</string>
+    <string name="yesterday">Вчера</string>
+    <plurals name="minutes_short">
+        <item quantity="one">%d мин</item>
+        <item quantity="few">%d мин</item>
+        <item quantity="many">%d мин</item>
+        <item quantity="other">%d мин</item>
+    </plurals>
+    <plurals name="days_streak">
+        <item quantity="one">%d день подряд</item>
+        <item quantity="few">%d дня подряд</item>
+        <item quantity="many">%d дней подряд</item>
+        <item quantity="other">%d дня подряд</item>
+    </plurals>
+
+    <!-- Home -->
+    <string name="greet_morning">Доброе утро</string>
+    <string name="greet_afternoon">Добрый день</string>
+    <string name="greet_evening">Добрый вечер</string>
+    <string name="home_title">Раскрой нож.</string>
+    <string name="home_sub">Выбери один инструмент. Хватит и минуты.</string>
+    <string name="tool_breathe_purpose">Ровное дыхание или раунды Вима Хофа.</string>
+    <string name="tool_bell_purpose">Мягкий звон, который возвращает в момент.</string>
+    <string name="tool_practices_purpose">Короткие паузы и медитации, 1–20 мин.</string>
+    <string name="tool_journal_purpose">Одна строка о том, что ты замечаешь.</string>
+    <string name="last_used">Последний раз · %1$s</string>
+    <string name="last_rang">Звонил · %1$s</string>
+    <string name="last_entry">Последняя запись · %1$s</string>
+    <string name="never_used">Пока не открывали</string>
+    <string name="stat_breathed">дыхания</string>
+    <string name="stat_bells">звонков</string>
+    <string name="stat_lines">строк</string>
+
+    <!-- Breathe: guided -->
+    <string name="breathe_title">Дыхание</string>
+    <string name="method_guided">Ровный темп</string>
+    <string name="method_wimhof">Вим Хоф</string>
+    <string name="preset_box">Квадрат</string>
+    <string name="preset_calm">Покой</string>
+    <string name="preset_coherent">Когерентное</string>
+    <string name="phase_in">Вдох…</string>
+    <string name="phase_hold">Задержка…</string>
+    <string name="phase_out">Выдох…</string>
+    <string name="phase_in_short">Вдох</string>
+    <string name="phase_hold_short">Пауза</string>
+    <string name="phase_out_short">Выдох</string>
+    <string name="phase_chip">%1$s %2$d с</string>
+    <string name="ready">Начни, когда будет удобно.</string>
+    <string name="paused">Пауза</string>
+    <string name="session_complete">Сессия завершена.</string>
+    <string name="pattern">ритм</string>
+    <string name="seconds">секунд</string>
+    <string name="well_done_short">отлично</string>
+    <string name="session_length">Длительность</string>
+    <string name="remaining">Осталось</string>
+    <string name="start_again">Начать снова</string>
+
+    <!-- Breathe: Wim Hof setup -->
+    <string name="wh_intro">Силовое дыхание раундами. Выбери уровень.</string>
+    <string name="wh_beginner">Начинающий</string>
+    <string name="wh_medium">Средний</string>
+    <string name="wh_medium_tag">классика</string>
+    <string name="wh_advanced">Продвинутый</string>
+    <string name="wh_expert">Эксперт</string>
+    <string name="wh_pace_beginner">Медленно, плавно</string>
+    <string name="wh_pace_medium">Умеренно, ритмично</string>
+    <string name="wh_pace_advanced">Энергично, глубоко</string>
+    <string name="wh_pace_expert">Интенсивно, быстро</string>
+    <string name="wh_level_meta">%1$s · %2$s</string>
+    <plurals name="wh_rounds">
+        <item quantity="one">%d раунд</item>
+        <item quantity="few">%d раунда</item>
+        <item quantity="many">%d раундов</item>
+        <item quantity="other">%d раунда</item>
+    </plurals>
+    <string name="wh_breaths_range">%1$s вдохов</string>
+    <string name="wh_rounds_word">раунда</string>
+    <string name="wh_fewer_rounds">Меньше раундов</string>
+    <string name="wh_more_rounds">Больше раундов</string>
+    <string name="wh_safety">Только сидя или лёжа. Головокружение и покалывание — это нормально. Никогда не практикуй в воде, рядом с водой или за рулём.</string>
+    <string name="wh_spec_rounds">Раунды</string>
+    <string name="wh_spec_breaths">Вдохов за раунд</string>
+    <string name="wh_spec_pace">Темп</string>
+    <string name="wh_spec_tempo">Один вдох</string>
+    <string name="wh_spec_tempo_value">вдох %1$s с · выдох %2$s с</string>
+    <string name="wh_spec_session">Сессия</string>
+    <string name="wh_spec_session_value">~%1$d мин</string>
+    <string name="wh_ladder">Цели задержки по раундам</string>
+    <string name="wh_start">Начать сессию</string>
+
+    <!-- Breathe: Wim Hof session -->
+    <string name="wh_round_of">Раунд %1$d из %2$d</string>
+    <string name="wh_sound">Звуки дыхания</string>
+    <string name="wh_get_comfortable">Устройся удобно</string>
+    <string name="wh_get_comfortable_hint">Сядь или ляг. Расслабь плечи и челюсть.</string>
+    <string name="wh_round_n">Раунд %1$d</string>
+    <string name="wh_round_n_hint">Ещё раз. В том же ритме.</string>
+    <string name="wh_fully_in">Глубокий вдох</string>
+    <string name="wh_fully_in_hint">Сначала в живот, потом в грудь.</string>
+    <string name="wh_let_go">Отпусти</string>
+    <string name="wh_let_go_hint">Не выталкивай воздух. Просто отпусти.</string>
+    <string name="wh_last_in">Последний вдох — полностью</string>
+    <string name="wh_last_out">И выдохни всё</string>
+    <string name="wh_last_out_hint">Затем задержка с пустыми лёгкими.</string>
+    <string name="wh_hold">Задержка</string>
+    <string name="wh_hold_hint">Лёгкие пусты, тело расслаблено. Вдохни, когда почувствуешь потребность.</string>
+    <string name="wh_hold_past_hint">Цель пройдена. Вдыхай, когда захочется.</string>
+    <string name="wh_recovery">Восстанавливающий вдох</string>
+    <string name="wh_recovery_hint">Вдохни полностью.</string>
+    <string name="wh_hold_it">Держи</string>
+    <string name="wh_hold_it_hint">Грудь полна. Мягко направь дыхание вверх.</string>
+    <string name="wh_next_round">Скоро следующий раунд.</string>
+    <string name="wh_last_round">Это был последний раунд.</string>
+    <string name="wh_paused_hint">Продолжай, когда будет удобно.</string>
+    <string name="wh_breathe_in">Вдохнуть</string>
+    <string name="wh_get_ready">приготовься</string>
+    <string name="wh_round_lower">раунд %1$d</string>
+    <string name="wh_of">из %1$d</string>
+    <string name="wh_last_breath">последний вдох</string>
+    <string name="wh_target">цель %1$s</string>
+    <string name="wh_past_target">цель %1$s пройдена</string>
+    <string name="wh_hold_unit">задержка</string>
+    <string name="wh_well_done">Отлично.</string>
+    <string name="wh_well_done_hint">Прислушайся к себе. Вставай не спеша.</string>
+    <string name="wh_sum_rounds">раунды</string>
+    <string name="wh_sum_longest">лучшая задержка</string>
+    <string name="wh_sum_total">всего</string>
+    <string name="wh_sum_round">Раунд %1$d</string>
+    <string name="wh_sum_note">Красная отметка — цель раунда. С практикой задержки даются легче — никогда не форсируй.</string>
+
+    <!-- Bell -->
+    <string name="bell_title">Колокол</string>
+    <string name="bell_name">Колокол осознанности</string>
+    <string name="bell_off">Выключен — звонков не будет, пока не включишь</string>
+    <string name="bell_next_in">Следующий звонок примерно через %1$d мин</string>
+    <string name="bell_next_at">Следующий звонок в %1$s</string>
+    <string name="bell_add_time_first">Добавь время, чтобы запланировать звонок</string>
+    <string name="bell_when">Когда звонить</string>
+    <string name="bell_mode_random">Случайно</string>
+    <string name="bell_mode_interval">Интервал</string>
+    <string name="bell_mode_times">По времени</string>
+    <string name="bell_random_desc">Звонок в непредсказуемый момент, каждые %1$d–%2$d мин.</string>
+    <string name="bell_interval_desc">Звонить каждые</string>
+    <string name="bell_times_desc">Звонить в это время</string>
+    <string name="bell_add_time">+ Добавить время</string>
+    <string name="bell_remove_time">Удалить %1$s</string>
+    <string name="bell_quiet">Тихие часы</string>
+    <string name="bell_quiet_title">Без звонков ночью</string>
+    <string name="bell_quiet_desc">В это время колокол молчит.</string>
+    <string name="bell_from">С</string>
+    <string name="bell_until">До</string>
+    <string name="bell_preview">Прослушать</string>
+    <string name="bell_preview_toast">Пробный звонок — один мягкий удар.</string>
+    <string name="bell_recent">Последние звонки</string>
+    <string name="bell_no_history">Звонков пока не было. Включи колокол — он мягко тебя найдёт.</string>
+    <string name="bell_missed">Без ответа</string>
+    <string name="bell_paused">Пауза сделана</string>
+    <string name="bell_add_note">Добавить заметку</string>
+    <string name="bell_note_hint">Что удалось заметить?</string>
+    <string name="bell_notif_title">Остановись на вдох</string>
+    <string name="bell_notif_text">Что происходит прямо сейчас — в теле, вокруг тебя?</string>
+    <string name="bell_notif_action">Пауза сделана</string>
+    <string name="bell_channel">Колокол осознанности</string>
+    <string name="bell_channel_desc">Мягкий звон, который напоминает остановиться.</string>
+    <string name="bell_need_permission">Разреши уведомления, чтобы колокол мог звонить.</string>
+    <string name="bell_allow">Разрешить</string>
+
+    <!-- Practices -->
+    <string name="practices_title">Практики</string>
+    <string name="practices_sub">Короткие паузы с подсказками и долгие сидения, когда есть время.</string>
+    <string name="micro_practices">Микропрактики</string>
+    <string name="micro_range">1–5 мин</string>
+    <string name="meditations">Медитации</string>
+    <string name="meditations_range">5–20 мин</string>
+    <string name="guided">%1$s · с подсказками</string>
+    <string name="timed">%1$s · по таймеру</string>
+    <string name="step_of">Шаг %1$d из %2$d</string>
+    <string name="part_of">Часть %1$d из %2$d</string>
+    <string name="practice_complete">Практика завершена.</string>
+    <string name="practice_complete_hint">Возьми этот темп с собой в следующее дело.</string>
+    <string name="repeat">Повторить</string>
+    <string name="back_to_practices">К практикам</string>
+    <string name="sit_complete">Медитация завершена.</string>
+    <string name="sat_for">Время практики: %1$s.</string>
+    <string name="brief_sit">Короткое сидение — хорошее начало.</string>
+
+    <string name="p_grounding">Заземление 5-4-3-2-1</string>
+    <string name="p_grounding_desc">Вернись в комнату через органы чувств.</string>
+    <string-array name="p_grounding_heads">
+        <item>Назови 5 вещей, которые видишь.</item>
+        <item>Заметь 4 вещи, которые ощущаешь.</item>
+        <item>Услышь 3 звука.</item>
+        <item>Найди 2 запаха.</item>
+        <item>Заметь 1 вкус.</item>
+        <item>Сделай один медленный вдох.</item>
+    </string-array>
+    <string-array name="p_grounding_hints">
+        <item>Веди взгляд медленно. Цвет, край, тень.</item>
+        <item>Стопы на полу, ткань на коже, температура воздуха.</item>
+        <item>Сначала близкие звуки, потом далёкие.</item>
+        <item>Если ничего не приходит, вспомни любимый запах.</item>
+        <item>Или просто почувствуй, что у тебя во рту.</item>
+        <item>Заметь, как ты чувствуешь себя сейчас по сравнению с тремя минутами раньше.</item>
+    </string-array>
+
+    <string name="p_scan">Сканирование тела</string>
+    <string name="p_scan_desc">Медленно веди внимание от стоп к макушке.</string>
+    <string-array name="p_scan_heads">
+        <item>Устройся на месте.</item>
+        <item>Перенеси внимание на стопы.</item>
+        <item>Поднимайся по ногам.</item>
+        <item>Задержи внимание на животе и груди.</item>
+        <item>Заметь плечи, руки и кисти.</item>
+        <item>Расслабь челюсть, глаза и лоб.</item>
+    </string-array>
+    <string-array name="p_scan_hints">
+        <item>Пусть руки отдыхают. Закрой глаза, если так комфортно.</item>
+        <item>Вес, тепло, давление. Ничего не нужно менять.</item>
+        <item>Икры, колени, бёдра. Заметь, где они касаются стула.</item>
+        <item>Почувствуй, как они поднимаются и опускаются сами.</item>
+        <item>Если плечи подняты, дай им опуститься.</item>
+        <item>Потом почувствуй всё тело целиком, сидящее здесь.</item>
+    </string-array>
+
+    <string name="p_three">Заметь три вещи</string>
+    <string name="p_three_desc">Найди три детали, которые раньше ускользали.</string>
+    <string-array name="p_three_heads">
+        <item>Найди то, что обычно не замечаешь.</item>
+        <item>Найди вторую деталь.</item>
+        <item>И третью.</item>
+    </string-array>
+    <string-array name="p_three_hints">
+        <item>Фактура, трещинка, отражение.</item>
+        <item>Посмотри внимательнее, чем обычно.</item>
+        <item>Потом вдохни и вернись к своим делам.</item>
+    </string-array>
+
+    <string name="p_start">Утренняя пауза</string>
+    <string name="p_start_desc">Задай одно намерение до начала дня.</string>
+    <string-array name="p_start_heads">
+        <item>Остановись, прежде чем взять телефон.</item>
+        <item>Заметь, с чем ты входишь в этот день.</item>
+        <item>Выбери одно намерение.</item>
+        <item>Возьми его в первое дело.</item>
+    </string-array>
+    <string-array name="p_start_hints">
+        <item>Посиди или постой неподвижно три вдоха.</item>
+        <item>Отдых, усталость, беспокойство — просто назови.</item>
+        <item>Пара слов. «Не спешить». «Сначала слушать».</item>
+        <item>К нему можно вернуться, когда зазвонит колокол.</item>
+    </string-array>
+
+    <string name="p_gratitude">Минута благодарности</string>
+    <string name="p_gratitude_desc">Назови одну вещь, которая получилась.</string>
+    <string-array name="p_gratitude_heads">
+        <item>Вспомни одну хорошую вещь за сегодня.</item>
+        <item>Вспомни её в деталях.</item>
+        <item>Побудь с этим.</item>
+    </string-array>
+    <string-array name="p_gratitude_hints">
+        <item>Мелочи тоже считаются. Кофе, сообщение, свет.</item>
+        <item>Где это было, кто был рядом, каково это было.</item>
+        <item>Три вдоха — больше ничего не нужно.</item>
+    </string-array>
+
+    <string name="m_anchor">Якорь дыхания</string>
+    <string name="m_anchor_desc">Будь с дыханием и возвращайся, когда мысли уходят.</string>
+    <string-array name="m_anchor_titles">
+        <item>Устройся</item>
+        <item>Приди к дыханию</item>
+        <item>Мысли ушли?</item>
+        <item>Глубже</item>
+        <item>Возвращение</item>
+    </string-array>
+    <string-array name="m_anchor_hints">
+        <item>Найди позу, в которой можно отдыхать.</item>
+        <item>Один вдох за раз, от начала до конца.</item>
+        <item>Заметь это и вернись. В этом и есть практика.</item>
+        <item>Мягче дыхание, тише ум.</item>
+        <item>Звуки, тело, комната.</item>
+    </string-array>
+
+    <string name="m_kindness">Любящая доброта</string>
+    <string name="m_kindness_desc">Пожелай добра, начиная с себя.</string>
+    <string-array name="m_kindness_titles">
+        <item>Устройся</item>
+        <item>Себе</item>
+        <item>Близкому человеку</item>
+        <item>Незнакомому лицу</item>
+        <item>Трудному человеку</item>
+        <item>Шире</item>
+    </string-array>
+    <string-array name="m_kindness_hints">
+        <item>Расслабься, взгляд мягкий.</item>
+        <item>Пусть мне будет хорошо. Пусть мне будет спокойно.</item>
+        <item>Представь его и пожелай того же.</item>
+        <item>Бариста, сосед, прохожий.</item>
+        <item>Мягко, без усилия.</item>
+        <item>Всем — с теплом.</item>
+    </string-array>
+
+    <string name="m_mountain">Медитация горы</string>
+    <string name="m_mountain_desc">Устойчиво и спокойно, что бы ни происходило.</string>
+    <string-array name="m_mountain_titles">
+        <item>Сиди как гора</item>
+        <item>Приходит погода</item>
+        <item>Нечего исправлять</item>
+        <item>Просто устойчиво</item>
+        <item>Возвращение</item>
+    </string-array>
+    <string-array name="m_mountain_hints">
+        <item>Широкое основание, прямая спина, неподвижность.</item>
+        <item>Мысли, звуки, настроения — проплывающие облака.</item>
+        <item>Гора не гонится за погодой.</item>
+        <item>Просто сидеть. Просто это.</item>
+        <item>Из камня обратно в тело.</item>
+    </string-array>
+
+    <string name="m_walking">Медитация в ходьбе</string>
+    <string name="m_walking_desc">Каждый шаг — полностью здесь.</string>
+    <string-array name="m_walking_titles">
+        <item>Сначала постой</item>
+        <item>Медленные шаги</item>
+        <item>Бережный разворот</item>
+        <item>Найди ритм</item>
+        <item>Мир в движении</item>
+        <item>Остановка</item>
+    </string-array>
+    <string-array name="m_walking_hints">
+        <item>Почувствуй обе стопы, прежде чем двинуться.</item>
+        <item>Поднять, перенести, поставить. Осознавай каждый.</item>
+        <item>Остановись в конце своей дорожки.</item>
+        <item>Пусть темп найдётся сам.</item>
+        <item>Воздух на коже, звуки приходят и уходят.</item>
+        <item>Остановись, постой, три полных вдоха.</item>
+    </string-array>
+
+    <string name="m_sleep">Подготовка ко сну</string>
+    <string name="m_sleep_desc">Тяжело, тепло, день окончен.</string>
+    <string-array name="m_sleep_titles">
+        <item>Ляг</item>
+        <item>Расслабление тела</item>
+        <item>Считай дыхание</item>
+        <item>Спасибо дню</item>
+        <item>Больше ничего не нужно</item>
+    </string-array>
+    <string-array name="m_sleep_hints">
+        <item>Позволь весу опуститься в кровать.</item>
+        <item>От пальцев ног вверх — тяжело и тепло.</item>
+        <item>Вдох — один… выдох — два… до десяти, и сначала.</item>
+        <item>Пусть образы проплывают мимо, не раскрываясь.</item>
+        <item>Никуда не нужно идти. Отдыхай.</item>
+    </string-array>
+
+    <!-- Journal -->
+    <string name="journal_title">Дневник</string>
+    <string name="todays_prompt">Вопрос дня</string>
+    <string name="another_prompt">Другой вопрос</string>
+    <string name="journal_placeholder">Достаточно одной строки…</string>
+    <string name="journal_rule">Одна строка, без правок.</string>
+    <string name="journal_count">%1$d / %2$d</string>
+    <string name="journal_write_first">Сначала напиши строку.</string>
+    <string name="journal_saved">Сохранено.</string>
+    <string name="journal_day_streak">дней подряд</string>
+    <string name="journal_echo">Эхо — из прошлых недель</string>
+    <string name="journal_echo_when">%1$s · %2$s</string>
+    <plurals name="weeks_ago">
+        <item quantity="one">%d неделю назад</item>
+        <item quantity="few">%d недели назад</item>
+        <item quantity="many">%d недель назад</item>
+        <item quantity="other">%d недели назад</item>
+    </plurals>
+    <string name="journal_recent">Последние строки</string>
+    <string name="journal_empty">Здесь будут собираться твои строки. Начни с вопроса дня.</string>
+    <string name="journal_today_at">Сегодня, %1$s</string>
+    <string-array name="journal_prompts">
+        <item>Что я замечаю прямо сейчас?</item>
+        <item>Какой звук я слышу?</item>
+        <item>Где в теле я чувствую этот день?</item>
+        <item>Что сегодня тихо получилось?</item>
+        <item>Что я могу оставить как есть?</item>
+        <item>За что я держусь?</item>
+        <item>Мимо чего я пробегаю?</item>
+    </string-array>
+
+    <!-- Settings -->
+    <string name="settings_title">Настройки</string>
+    <string name="settings_language">Язык</string>
+    <string name="lang_system">Как в системе</string>
+    <string name="settings_feedback">Звук и вибрация</string>
+    <string name="settings_sound">Звуки дыхания</string>
+    <string name="settings_sound_desc">Мягкий шум, который нарастает и стихает вместе с дыханием.</string>
+    <string name="settings_haptics">Вибрация</string>
+    <string name="settings_haptics_desc">Лёгкий отклик при смене фазы дыхания.</string>
+    <string name="settings_notifications">Уведомления</string>
+    <string name="settings_notifications_on">Разрешены — колокол может звонить.</string>
+    <string name="settings_notifications_off">Не разрешены — колокол молчит.</string>
+    <string name="settings_about">О приложении</string>
+    <string name="settings_about_text">SwissZen %1$s · для маленьких тихих пауз.</string>
+    <string name="settings_disclaimer">Дыхательные упражнения — не лечение. Если у тебя проблемы с сердцем, эпилепсия, беременность или есть сомнения, посоветуйся с врачом перед дыханием по Виму Хофу.</string>
+</resources>
