@@ -15,7 +15,7 @@
 ![Languages](https://img.shields.io/badge/lang-EN%20%7C%20RU-7FA8BA)
 [![License: MIT](https://img.shields.io/badge/license-MIT-B9D4DF)](LICENSE)
 
-**English** · [Русский](README.ru.md)
+**English** · [Русский](README.ru.md) · [Website](https://bigdevwhale.github.io/stillcraft/apps/swisszen/)
 
 <img src="docs/screenshots/overview.png" alt="SwissZen on a phone: Home, Wim Hof levels, Wim Hof session, Practices, Bell" width="100%" />
 

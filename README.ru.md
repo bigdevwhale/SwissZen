@@ -14,7 +14,7 @@
 ![Языки](https://img.shields.io/badge/lang-EN%20%7C%20RU-7FA8BA)
 [![License: MIT](https://img.shields.io/badge/license-MIT-B9D4DF)](LICENSE)
 
-[English](README.md) · **Русский**
+[English](README.md) · **Русский** · [Сайт](https://bigdevwhale.github.io/stillcraft/apps/swisszen/)
 
 <img src="docs/screenshots/overview.ru.png" alt="Экраны SwissZen" width="100%" />
 
