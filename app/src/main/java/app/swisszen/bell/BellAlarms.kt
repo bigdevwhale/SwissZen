@@ -6,13 +6,15 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.BroadcastReceiver
-import android.content.ContentResolver
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.media.AudioAttributes
+import android.media.AudioManager
+import android.media.MediaPlayer
 import android.os.Build
-import androidx.core.net.toUri
+import android.os.VibrationEffect
+import android.os.Vibrator
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
@@ -24,12 +26,18 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.suspendCancellableCoroutine
+import kotlinx.coroutines.withTimeoutOrNull
+import kotlin.coroutines.resume
 import java.time.LocalDateTime
 import java.time.ZoneId
 
 /** Schedules the next mindfulness bell with AlarmManager and shows the bell notification. */
 object BellAlarms {
-    private const val CHANNEL_ID = "bell_v1"
+    // The channel is silent: the receiver plays the bell itself. Channel sounds from app resources
+    // are unreliable (HyperOS resets them to "None"), and a channel's sound can't change once created.
+    private const val CHANNEL_ID = "bell_v2"
+    private const val OLD_CHANNEL_ID = "bell_v1"
     private const val NOTIFICATION_ID = 7
     const val ACTION_RING = "app.swisszen.bell.RING"
     const val ACTION_ANSWER = "app.swisszen.bell.ANSWER"
@@ -42,18 +50,44 @@ object BellAlarms {
 
     fun ensureChannel(context: Context) {
         val nm = context.getSystemService(NotificationManager::class.java)
+        nm.deleteNotificationChannel(OLD_CHANNEL_ID)
         if (nm.getNotificationChannel(CHANNEL_ID) != null) return
-        val sound = "${ContentResolver.SCHEME_ANDROID_RESOURCE}://${context.packageName}/${R.raw.bell}".toUri()
         val channel = NotificationChannel(CHANNEL_ID, context.getString(R.string.bell_channel), NotificationManager.IMPORTANCE_DEFAULT).apply {
             description = context.getString(R.string.bell_channel_desc)
-            setSound(sound, AudioAttributes.Builder()
-                .setUsage(AudioAttributes.USAGE_NOTIFICATION)
-                .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
-                .build())
-            enableVibration(true)
-            vibrationPattern = longArrayOf(0, 60, 120, 60)
+            setSound(null, null)
+            enableVibration(false)
         }
         nm.createNotificationChannel(channel)
+    }
+
+    /** Rings the bell through the notification stream, honouring silent/vibrate mode and Do Not Disturb. */
+    suspend fun ring(context: Context) {
+        val audio = context.getSystemService(AudioManager::class.java)
+        val nm = context.getSystemService(NotificationManager::class.java)
+        if (nm.currentInterruptionFilter > NotificationManager.INTERRUPTION_FILTER_ALL) return
+        if (audio.ringerMode != AudioManager.RINGER_MODE_SILENT) vibrate(context)
+        if (audio.ringerMode != AudioManager.RINGER_MODE_NORMAL) return
+        val attrs = AudioAttributes.Builder()
+            .setUsage(AudioAttributes.USAGE_NOTIFICATION)
+            .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+            .build()
+        val player = MediaPlayer.create(context, R.raw.bell, attrs, audio.generateAudioSessionId()) ?: return
+        try {
+            // The receiver's goAsync() window is ~10 s; the chime is under 5 s.
+            withTimeoutOrNull(8_000) {
+                suspendCancellableCoroutine { cont ->
+                    player.setOnCompletionListener { cont.resume(Unit) }
+                    player.start()
+                }
+            }
+        } finally {
+            player.release()
+        }
+    }
+
+    private fun vibrate(context: Context) {
+        val vibrator = context.getSystemService(Vibrator::class.java) ?: return
+        vibrator.vibrate(VibrationEffect.createWaveform(longArrayOf(0, 60, 120, 60), -1))
     }
 
     private fun ringIntent(context: Context) = PendingIntent.getBroadcast(
@@ -129,8 +163,11 @@ class BellReceiver : BroadcastReceiver() {
                         if (app.container.settings.bellNow().enabled) {
                             val id = app.container.db.bell().insert(BellEvent(rangAt = System.currentTimeMillis()))
                             BellAlarms.notify(context, id)
+                            BellAlarms.reschedule(context)
+                            if (BellAlarms.canNotify(context)) BellAlarms.ring(context)
+                        } else {
+                            BellAlarms.reschedule(context)
                         }
-                        BellAlarms.reschedule(context)
                     }
                     BellAlarms.ACTION_ANSWER -> {
                         val id = intent.getLongExtra(BellAlarms.EXTRA_EVENT_ID, -1)
