@@ -77,6 +77,7 @@ import app.swisszen.ui.timeOf
 import app.swisszen.ui.toLocalDateTime
 import app.swisszen.ui.theme.Inter
 import app.swisszen.ui.theme.Zen
+import app.swisszen.ui.theme.ZenLight
 import app.swisszen.ui.theme.ZenType
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -136,22 +137,22 @@ fun JournalScreen() {
         // Prompt card
         Column(
             Modifier.fillMaxWidth().padding(top = 18.dp).clip(Zen.RLg)
-                .background(Brush.radialGradient(listOf(Color(0xFF2F5E4C), Zen.Pine), radius = 900f, center = androidx.compose.ui.geometry.Offset(900f, 0f)))
+                .background(Brush.radialGradient(listOf(Color(0xFF2F5E4C), ZenLight.pine), radius = 900f, center = androidx.compose.ui.geometry.Offset(900f, 0f)))
                 .padding(start = 20.dp, end = 20.dp, top = 22.dp, bottom = 18.dp)
         ) {
-            Text(stringResource(R.string.todays_prompt).uppercase(), style = ZenType.Eyebrow.copy(color = Zen.Ice2))
+            Text(stringResource(R.string.todays_prompt).uppercase(), style = ZenType.Eyebrow.copy(color = ZenLight.ice2))
             AnimatedContent(promptIdx, label = "prompt", transitionSpec = { fadeIn() togetherWith fadeOut() }) { i ->
                 Text(prompts[i], fontFamily = Inter, fontWeight = FontWeight.Medium, fontSize = 23.sp, lineHeight = 29.sp, letterSpacing = (-0.02).em,
-                    color = Zen.OnPine, modifier = Modifier.padding(top = 10.dp, bottom = 16.dp))
+                    color = ZenLight.onPine, modifier = Modifier.padding(top = 10.dp, bottom = 16.dp))
             }
             Row(
-                Modifier.clip(RoundedCornerShape(12.dp)).background(Zen.Ice.copy(alpha = .14f)).tap { promptIdx = (promptIdx + 1) % prompts.size }
+                Modifier.clip(RoundedCornerShape(12.dp)).background(ZenLight.ice.copy(alpha = .14f)).tap { promptIdx = (promptIdx + 1) % prompts.size }
                     .padding(horizontal = 12.dp, vertical = 9.dp),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                ZIconView(ZIcons.Shuffle, Zen.Ice, size = 16.dp, strokeWidth = 1.7f)
+                ZIconView(ZIcons.Shuffle, ZenLight.ice, size = 16.dp, strokeWidth = 1.7f)
                 Spacer(Modifier.width(6.dp))
-                Text(stringResource(R.string.another_prompt), fontFamily = Inter, fontWeight = FontWeight.Medium, fontSize = 13.sp, color = Zen.Ice)
+                Text(stringResource(R.string.another_prompt), fontFamily = Inter, fontWeight = FontWeight.Medium, fontSize = 13.sp, color = ZenLight.ice)
             }
         }
 
@@ -213,7 +214,7 @@ fun JournalScreen() {
             val date = e.createdAt.toLocalDateTime().toLocalDate()
             val weeks = (ChronoUnit.DAYS.between(date, today) / 7).toInt().coerceAtLeast(1)
             Column(
-                Modifier.fillMaxWidth().clip(Zen.RLg).background(Brush.linearGradient(listOf(Zen.Ice, Color(0xFFEDF4F7)))).padding(20.dp)
+                Modifier.fillMaxWidth().clip(Zen.RLg).background(Brush.linearGradient(listOf(Zen.Ice, Zen.IceHi))).padding(20.dp)
             ) {
                 Text("“${e.text}”", fontFamily = Inter, fontSize = 17.sp, lineHeight = 25.sp, letterSpacing = (-0.01).em, color = Zen.Ink)
                 Text(stringResource(R.string.journal_echo_when, dayLabel(date, locale), pluralStringResource(R.plurals.weeks_ago, weeks, weeks)),

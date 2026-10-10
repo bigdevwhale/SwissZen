@@ -111,7 +111,7 @@ fun PracticesScreen(onPractice: (Int) -> Unit, onMeditation: (Int) -> Unit) {
         Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
             Catalog.meditations.forEachIndexed { i, m ->
                 PCard(m.icon, stringResource(m.name), stringResource(m.desc), pluralStringResource(R.plurals.minutes_short, m.minutes, m.minutes),
-                    tileBg = Zen.Pine, tileTint = Color(0xFFEAF3F1)) { onMeditation(i) }
+                    tileBg = Zen.Pine, tileTint = Zen.OnPine) { onMeditation(i) }
             }
         }
     }
@@ -139,7 +139,7 @@ private fun Glyph(content: @Composable () -> Unit) {
     val s by t.animateFloat(.96f, 1.04f, infiniteRepeatable(tween(3000, easing = LinearEasing), RepeatMode.Reverse), label = "glyphScale")
     Box(
         Modifier.size(132.dp).scale(s).clip(CircleShape)
-            .background(Brush.radialGradient(listOf(Color.White, Color(0xFFE6F0F4), Color(0xFFC3DAE3)), center = Offset(150f, 120f), radius = 420f)),
+            .background(Brush.radialGradient(Zen.Halo, center = Offset(150f, 120f), radius = 420f)),
         contentAlignment = Alignment.Center,
     ) { content() }
 }

@@ -43,12 +43,15 @@ Home ties it together: today's minutes breathed, bells heard and lines written, 
 
 ### Wim Hof levels
 
-| Level | Rounds | Breaths / round | Pace (in / out) | Hold targets |
-|---|:---:|:---:|---|---|
-| Beginner | 3 | 30 | slow, smooth · 2.0 s / 1.6 s | 0:30 → 1:00 → 1:30 |
-| Medium · classic | 3 | 30–35 | moderate, rhythmic · 1.6 s / 1.3 s | 1:00 → 1:30 → 1:30–2:00 |
-| Advanced | 4 | 35–40 | energetic, deep · 1.4 s / 1.0 s | 1:00 → 1:30 → 2:00 → 2:30 |
-| Expert | 4–5 | 40–50 | intense, fast · 1.1 s / 0.8 s | 1:30 → 2:00 → 2:30 → 3:00+ |
+| Level | Rounds | Breaths / round | Hold targets |
+|---|:---:|:---:|---|
+| Beginner | 3 | 30 | 0:30 → 1:00 → 1:30 |
+| Medium · classic | 3 | 30–35 | 1:00 → 1:30 → 1:30–2:00 |
+| Advanced | 4 | 35–40 | 1:00 → 1:30 → 2:00 → 2:30 |
+| Expert | 4–5 | 40–50 | 1:30 → 2:00 → 2:30 → 3:00+ |
+| Custom preset | 1–6 | 10–60 | 1:00 → 1:30 → … → 3:00 |
+
+The breathing tempo is the same for every level: **2.0 s in / 1.5 s out** by default, adjustable in 0.1 s steps (0.5–4 s) right on the Wim Hof screen.
 
 Each round: power breaths → last breath, let it all go → **hold on empty lungs** (open‑ended, you decide when to breathe in) → recovery breath held for 15 s → next round.
 
@@ -60,6 +63,10 @@ Each round: power breaths → last breath, let it all go → **hold on empty lun
 
 Every screen, practice and prompt is translated. Switch in **Settings → Language** (System / English / Русский) — on Android 13+ the app also appears in the system's per‑app language settings.
 
+## Light & dark
+
+**Settings → Appearance**: System / Light / Dark. The dark theme keeps the pine‑and‑ice look on a deep green‑black ground.
+
 ## Download
 
 Grab the latest APK from **[Releases](https://github.com/bigdevwhale/SwissZen/releases/latest)**, or the debug APK attached to any [CI run](https://github.com/bigdevwhale/SwissZen/actions/workflows/android.yml).
@@ -70,7 +77,7 @@ Android 8.0 (API 26) or newer.
 - **Kotlin + Jetpack Compose**, Material 3 with a custom design system (ivory `#F7F4EE`, pine `#1E4D3B`, ice `#DFECF2`, Swiss red `#E30613`, Inter typeface).
 - **Room** for journal, bell history and session log · **DataStore** for settings.
 - **AlarmManager** (`setAndAllowWhileIdle`, no exact‑alarm permission) + notification channel with a custom chime for the bell; rescheduled on boot and time changes.
-- **Synthesised breath audio** — white noise through a sweeping band‑pass filter, rendered with `AudioTrack`, so the sound always matches the level's tempo.
+- **Synthesised breath audio** — white noise through a sweeping band‑pass filter, rendered with `AudioTrack`, so the sound always matches the breathing tempo.
 - The Wim Hof session is a pure‑Kotlin state machine (`breath/WimHof.kt`) driven per frame, with unit tests for every level's timing.
 - Per‑app language via `AppCompatDelegate.setApplicationLocales` with an auto‑generated locale config.
 - No accounts, no network, no analytics. Everything stays on the device.

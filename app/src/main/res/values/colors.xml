@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="ivory">#F7F4EE</color>
+    <color name="window_bg">@color/ivory</color>
     <color name="pine">#1E4D3B</color>
     <color name="swiss_red">#E30613</color>
 </resources>

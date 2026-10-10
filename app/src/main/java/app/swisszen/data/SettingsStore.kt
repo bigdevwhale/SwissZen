@@ -3,6 +3,7 @@ package app.swisszen.data
 import android.content.Context
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
+import androidx.datastore.preferences.core.doublePreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.longPreferencesKey
@@ -10,6 +11,8 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import app.swisszen.bell.BellConfig
 import app.swisszen.bell.BellMode
+import app.swisszen.breath.WimHofEngine
+import app.swisszen.breath.WimHofLevel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
@@ -21,6 +24,10 @@ data class AppSettings(
     val haptics: Boolean = true,
     val whLevel: String = "beg",
     val whExpertRounds: Int = 4,
+    val whInhale: Double = WimHofEngine.DEFAULT_INHALE,
+    val whExhale: Double = WimHofEngine.DEFAULT_EXHALE,
+    val whCustomRounds: Int = 3,
+    val whCustomBreaths: Int = 30,
 )
 
 class SettingsStore(private val context: Context) {
@@ -29,6 +36,10 @@ class SettingsStore(private val context: Context) {
         val haptics = booleanPreferencesKey("haptics")
         val whLevel = stringPreferencesKey("wh_level")
         val whExpertRounds = intPreferencesKey("wh_expert_rounds")
+        val whInhale = doublePreferencesKey("wh_inhale")
+        val whExhale = doublePreferencesKey("wh_exhale")
+        val whCustomRounds = intPreferencesKey("wh_custom_rounds")
+        val whCustomBreaths = intPreferencesKey("wh_custom_breaths")
         val bellOn = booleanPreferencesKey("bell_on")
         val bellMode = stringPreferencesKey("bell_mode")
         val randMin = intPreferencesKey("bell_rand_min")
@@ -47,6 +58,10 @@ class SettingsStore(private val context: Context) {
             haptics = p[K.haptics] ?: true,
             whLevel = p[K.whLevel] ?: "beg",
             whExpertRounds = p[K.whExpertRounds] ?: 4,
+            whInhale = p[K.whInhale] ?: WimHofEngine.DEFAULT_INHALE,
+            whExhale = p[K.whExhale] ?: WimHofEngine.DEFAULT_EXHALE,
+            whCustomRounds = p[K.whCustomRounds] ?: 3,
+            whCustomBreaths = p[K.whCustomBreaths] ?: 30,
         )
     }
 
@@ -72,6 +87,13 @@ class SettingsStore(private val context: Context) {
     suspend fun setHaptics(on: Boolean) = context.dataStore.edit { it[K.haptics] = on }
     suspend fun setWimHof(level: String, expertRounds: Int) = context.dataStore.edit {
         it[K.whLevel] = level; it[K.whExpertRounds] = expertRounds
+    }
+    suspend fun setWimHofTempo(inhale: Double, exhale: Double) = context.dataStore.edit {
+        it[K.whInhale] = inhale; it[K.whExhale] = exhale
+    }
+    /** Saves the custom preset and makes it the selected level. */
+    suspend fun setWimHofCustom(rounds: Int, breaths: Int) = context.dataStore.edit {
+        it[K.whCustomRounds] = rounds; it[K.whCustomBreaths] = breaths; it[K.whLevel] = WimHofLevel.CUSTOM
     }
 
     suspend fun updateBell(transform: (BellConfig) -> BellConfig): BellConfig {

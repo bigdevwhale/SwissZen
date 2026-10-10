@@ -85,10 +85,10 @@
     <string name="wh_medium_tag">classic</string>
     <string name="wh_advanced">Advanced</string>
     <string name="wh_expert">Expert</string>
-    <string name="wh_pace_beginner">Slow, smooth</string>
-    <string name="wh_pace_medium">Moderate, rhythmic</string>
-    <string name="wh_pace_advanced">Energetic, deep</string>
-    <string name="wh_pace_expert">Intense, fast</string>
+    <string name="wh_custom">Custom preset</string>
+    <string name="wh_custom_desc">Your own rounds and breath count. Saved automatically.</string>
+    <string name="wh_less">%1$s: less</string>
+    <string name="wh_more">%1$s: more</string>
     <string name="wh_level_meta">%1$s · %2$s</string>
     <plurals name="wh_rounds">
         <item quantity="one">%d round</item>
@@ -101,9 +101,11 @@
     <string name="wh_safety">Always sit or lie down. Feeling dizzy or tingly is normal. Never practice in or near water, or while driving.</string>
     <string name="wh_spec_rounds">Rounds</string>
     <string name="wh_spec_breaths">Breaths per round</string>
-    <string name="wh_spec_pace">Pace</string>
-    <string name="wh_spec_tempo">One breath</string>
-    <string name="wh_spec_tempo_value">in %1$s s · out %2$s s</string>
+    <string name="wh_spec_inhale">Inhale</string>
+    <string name="wh_spec_exhale">Exhale</string>
+    <string name="wh_seconds_value">%1$s s</string>
+    <string name="wh_tempo_shorter">%1$s: shorter</string>
+    <string name="wh_tempo_longer">%1$s: longer</string>
     <string name="wh_spec_session">Session</string>
     <string name="wh_spec_session_value">~%1$d min</string>
     <string name="wh_ladder">Breath-hold targets, round by round</string>
@@ -408,6 +410,10 @@
     <string name="lang_system">System default</string>
     <string name="lang_en" translatable="false">English</string>
     <string name="lang_ru" translatable="false">Русский</string>
+    <string name="settings_theme">Appearance</string>
+    <string name="theme_system">System default</string>
+    <string name="theme_light">Light</string>
+    <string name="theme_dark">Dark</string>
     <string name="settings_feedback">Sound &amp; haptics</string>
     <string name="settings_sound">Breath sounds</string>
     <string name="settings_sound_desc">A soft rising and falling hush that follows your breath.</string>

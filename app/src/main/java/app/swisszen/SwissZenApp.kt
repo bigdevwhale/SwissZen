@@ -6,6 +6,7 @@ import app.swisszen.audio.SoundSynth
 import app.swisszen.bell.BellAlarms
 import app.swisszen.data.SettingsStore
 import app.swisszen.data.ZenDatabase
+import app.swisszen.ui.ThemeMode
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -24,6 +25,7 @@ class SwissZenApp : Application() {
 
     override fun onCreate() {
         super.onCreate()
+        ThemeMode.restore(this)
         container = AppContainer(this)
         BellAlarms.ensureChannel(this)
     }

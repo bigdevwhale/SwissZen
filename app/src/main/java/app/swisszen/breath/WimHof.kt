@@ -5,7 +5,7 @@ import kotlin.math.cos
 import kotlin.math.sin
 
 /**
- * A Wim Hof level. [inhale]/[exhale] set the tempo of one power breath in seconds,
+ * A Wim Hof level. The tempo of one power breath is the user's own setting, the same for every level.
  * [breaths] ramps inside the level's range round by round, [holds] are the per-round
  * breath-hold targets (seconds) and [ladder] their display labels.
  */
@@ -15,24 +15,38 @@ data class WimHofLevel(
     val maxRounds: Int,
     val breaths: List<Int>,
     val breathsLabel: String,
-    val inhale: Double,
-    val exhale: Double,
     val holds: List<Int>,
     val ladder: List<String>,
 ) {
-    fun estimateSeconds(rounds: Int): Double =
+    fun estimateSeconds(rounds: Int, inhale: Double, exhale: Double): Double =
         (0 until rounds).sumOf { r ->
             WimHofEngine.INTRO + breaths[r] * (inhale + exhale) + WimHofEngine.LAST_IN + WimHofEngine.LAST_OUT +
                 holds[r] + WimHofEngine.REC_IN + WimHofEngine.REC_HOLD + WimHofEngine.REC_OUT
         }
 
     companion object {
-        val BEGINNER = WimHofLevel("beg", 3, 3, listOf(30, 30, 30), "30", 2.0, 1.6, listOf(30, 60, 90), listOf("0:30", "1:00", "1:30"))
-        val MEDIUM = WimHofLevel("med", 3, 3, listOf(30, 33, 35), "30–35", 1.6, 1.3, listOf(60, 90, 105), listOf("1:00", "1:30", "1:30–2:00"))
-        val ADVANCED = WimHofLevel("adv", 4, 4, listOf(35, 37, 38, 40), "35–40", 1.4, 1.0, listOf(60, 90, 120, 150), listOf("1:00", "1:30", "2:00", "2:30"))
-        val EXPERT = WimHofLevel("exp", 4, 5, listOf(40, 43, 46, 50, 50), "40–50", 1.1, 0.8, listOf(90, 120, 150, 180, 180), listOf("1:30", "2:00", "2:30", "3:00+", "3:00+"))
+        val BEGINNER = WimHofLevel("beg", 3, 3, listOf(30, 30, 30), "30", listOf(30, 60, 90), listOf("0:30", "1:00", "1:30"))
+        val MEDIUM = WimHofLevel("med", 3, 3, listOf(30, 33, 35), "30–35", listOf(60, 90, 105), listOf("1:00", "1:30", "1:30–2:00"))
+        val ADVANCED = WimHofLevel("adv", 4, 4, listOf(35, 37, 38, 40), "35–40", listOf(60, 90, 120, 150), listOf("1:00", "1:30", "2:00", "2:30"))
+        val EXPERT = WimHofLevel("exp", 4, 5, listOf(40, 43, 46, 50, 50), "40–50", listOf(90, 120, 150, 180, 180), listOf("1:30", "2:00", "2:30", "3:00+", "3:00+"))
         val ALL = listOf(BEGINNER, MEDIUM, ADVANCED, EXPERT)
         fun byId(id: String) = ALL.firstOrNull { it.id == id } ?: BEGINNER
+
+        /** The user's own preset: same breath count every round, hold targets ramp 1:00 → 3:00. */
+        const val CUSTOM = "cus"
+        const val CUSTOM_MAX_ROUNDS = 6
+        const val CUSTOM_MIN_BREATHS = 10
+        const val CUSTOM_MAX_BREATHS = 60
+
+        fun custom(rounds: Int, breaths: Int): WimHofLevel {
+            val r = rounds.coerceIn(1, CUSTOM_MAX_ROUNDS)
+            val b = breaths.coerceIn(CUSTOM_MIN_BREATHS, CUSTOM_MAX_BREATHS)
+            val holds = List(r) { minOf(60 + it * 30, 180) }
+            return WimHofLevel(CUSTOM, r, r, List(r) { b }, "$b", holds, holds.map { "%d:%02d".format(it / 60, it % 60) })
+        }
+
+        fun resolve(id: String, customRounds: Int, customBreaths: Int) =
+            if (id == CUSTOM) custom(customRounds, customBreaths) else byId(id)
     }
 }
 
@@ -43,7 +57,12 @@ enum class WhPhase { INTRO, IN, OUT, LAST_IN, LAST_OUT, HOLD, REC_IN, REC_HOLD, 
  * Round: intro → N × (in, out) → last in → let go → hold (open-ended, ended by [breatheIn])
  * → recovery in → 15 s hold → let go → next round or DONE.
  */
-class WimHofEngine(val level: WimHofLevel, val rounds: Int = level.defaultRounds) {
+class WimHofEngine(
+    val level: WimHofLevel,
+    val rounds: Int = level.defaultRounds,
+    val inhale: Double = DEFAULT_INHALE,
+    val exhale: Double = DEFAULT_EXHALE,
+) {
     var phase = WhPhase.INTRO; private set
     var t = 0.0; private set           // seconds into the current phase
     var total = 0.0; private set       // seconds of the whole session (paused time excluded)
@@ -58,8 +77,8 @@ class WimHofEngine(val level: WimHofLevel, val rounds: Int = level.defaultRounds
 
     fun duration(p: WhPhase = phase): Double = when (p) {
         WhPhase.INTRO -> INTRO
-        WhPhase.IN -> level.inhale
-        WhPhase.OUT -> level.exhale
+        WhPhase.IN -> inhale
+        WhPhase.OUT -> exhale
         WhPhase.LAST_IN -> LAST_IN
         WhPhase.LAST_OUT -> LAST_OUT
         WhPhase.HOLD -> Double.POSITIVE_INFINITY
@@ -139,6 +158,15 @@ class WimHofEngine(val level: WimHofLevel, val rounds: Int = level.defaultRounds
     }.toFloat()
 
     companion object {
+        /**
+         * Default tempo of one power breath; the user can change it in 0.1 s steps within [TEMPO_MIN]..[TEMPO_MAX].
+         * The official method gives no seconds ("fully in, let go"); 2.0 + 1.5 s leaves time for a full belly-to-chest
+         * inhale and a passive release, and puts 30 breaths at about 1:45, in line with the guided recordings.
+         */
+        const val DEFAULT_INHALE = 2.0
+        const val DEFAULT_EXHALE = 1.5
+        const val TEMPO_MIN = 0.5
+        const val TEMPO_MAX = 4.0
         const val INTRO = 3.0
         const val LAST_IN = 2.6
         const val LAST_OUT = 3.4

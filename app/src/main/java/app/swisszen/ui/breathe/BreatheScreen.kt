@@ -57,6 +57,7 @@ import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.selected
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
@@ -68,6 +69,7 @@ import app.swisszen.AppContainer
 import app.swisszen.R
 import app.swisszen.breath.GuidedPaceEngine
 import app.swisszen.breath.GuidedPreset
+import app.swisszen.breath.WimHofEngine
 import app.swisszen.breath.WimHofLevel
 import app.swisszen.data.AppSettings
 import app.swisszen.data.SessionLog
@@ -99,6 +101,8 @@ import kotlin.math.roundToInt
 class BreatheViewModel(private val c: AppContainer) : ViewModel() {
     val settings = c.settings.settings.stateIn(viewModelScope, SharingStarted.Eagerly, AppSettings())
     fun setLevel(id: String, expertRounds: Int) = viewModelScope.launch { c.settings.setWimHof(id, expertRounds) }
+    fun setTempo(inhale: Double, exhale: Double) = viewModelScope.launch { c.settings.setWimHofTempo(inhale, exhale) }
+    fun setCustom(rounds: Int, breaths: Int) = viewModelScope.launch { c.settings.setWimHofCustom(rounds, breaths) }
     fun log(kind: String, startedAt: Long, seconds: Int, detail: String?) = viewModelScope.launch {
         if (seconds >= 20) c.db.sessions().insert(SessionLog(kind = kind, startedAt = startedAt, durationSec = seconds, detail = detail))
     }
@@ -129,7 +133,7 @@ fun BreatheScreen(onStartWimHof: () -> Unit) {
             if (it != 0) guided.stop(vm)
         }
         if (method == 0) GuidedPanel(guided, vm, settings)
-        else WimHofSetup(settings, onPick = vm::setLevel, onStart = onStartWimHof)
+        else WimHofSetup(settings, onPick = vm::setLevel, onCustom = vm::setCustom, onTempo = vm::setTempo, onStart = onStartWimHof)
     }
 }
 
@@ -301,14 +305,11 @@ private fun ColumnScope.GuidedPanel(g: GuidedState, vm: BreatheViewModel, settin
 // ---------------- Wim Hof setup ----------------
 
 @Composable
-fun levelName(id: String) = stringResource(when (id) { "med" -> R.string.wh_medium; "adv" -> R.string.wh_advanced; "exp" -> R.string.wh_expert; else -> R.string.wh_beginner })
+fun levelName(id: String) = stringResource(when (id) { "med" -> R.string.wh_medium; "adv" -> R.string.wh_advanced; "exp" -> R.string.wh_expert; WimHofLevel.CUSTOM -> R.string.wh_custom; else -> R.string.wh_beginner })
 
 @Composable
-fun levelPace(id: String) = stringResource(when (id) { "med" -> R.string.wh_pace_medium; "adv" -> R.string.wh_pace_advanced; "exp" -> R.string.wh_pace_expert; else -> R.string.wh_pace_beginner })
-
-@Composable
-private fun WimHofSetup(settings: AppSettings, onPick: (String, Int) -> Unit, onStart: () -> Unit) {
-    val level = WimHofLevel.byId(settings.whLevel)
+private fun WimHofSetup(settings: AppSettings, onPick: (String, Int) -> Unit, onCustom: (Int, Int) -> Unit, onTempo: (Double, Double) -> Unit, onStart: () -> Unit) {
+    val level = WimHofLevel.resolve(settings.whLevel, settings.whCustomRounds, settings.whCustomBreaths)
     val rounds = if (level.id == "exp") settings.whExpertRounds else level.defaultRounds
 
     Text(stringResource(R.string.wh_intro), style = ZenType.Muted, modifier = Modifier.padding(start = 2.dp, end = 2.dp, bottom = 12.dp))
@@ -321,6 +322,8 @@ private fun WimHofSetup(settings: AppSettings, onPick: (String, Int) -> Unit, on
             }
         }
     }
+    CustomCard(level.id == WimHofLevel.CUSTOM, settings.whCustomRounds, settings.whCustomBreaths,
+        onPick = { onCustom(settings.whCustomRounds, settings.whCustomBreaths) }, onChange = onCustom)
     Row(Modifier.padding(start = 4.dp, end = 4.dp, top = 4.dp)) {
         ZIconView(ZIcons.Shield, Zen.Faint, size = 16.dp, strokeWidth = 1.7f, modifier = Modifier.padding(top = 1.dp))
         Spacer(Modifier.width(8.dp))
@@ -330,9 +333,10 @@ private fun WimHofSetup(settings: AppSettings, onPick: (String, Int) -> Unit, on
     ZenCard(Modifier.fillMaxWidth().padding(top = 16.dp)) {
         SpecRow(stringResource(R.string.wh_spec_rounds), "$rounds")
         SpecRow(stringResource(R.string.wh_spec_breaths), level.breathsLabel)
-        SpecRow(stringResource(R.string.wh_spec_pace), levelPace(level.id))
-        SpecRow(stringResource(R.string.wh_spec_tempo), stringResource(R.string.wh_spec_tempo_value, "%.1f".format(level.inhale), "%.1f".format(level.exhale)))
-        SpecRow(stringResource(R.string.wh_spec_session), stringResource(R.string.wh_spec_session_value, (level.estimateSeconds(rounds) / 60).roundToInt()), divider = false)
+        TempoRow(stringResource(R.string.wh_spec_inhale), settings.whInhale) { onTempo(it, settings.whExhale) }
+        TempoRow(stringResource(R.string.wh_spec_exhale), settings.whExhale) { onTempo(settings.whInhale, it) }
+        SpecRow(stringResource(R.string.wh_spec_session), stringResource(R.string.wh_spec_session_value,
+            (level.estimateSeconds(rounds, settings.whInhale, settings.whExhale) / 60).roundToInt()), divider = false)
         Text(stringResource(R.string.wh_ladder), fontFamily = Inter, fontSize = 12.sp, color = Zen.Muted, modifier = Modifier.padding(start = 2.dp, top = 14.dp))
         Ladder(level, rounds)
         ZenButton(stringResource(R.string.wh_start), Modifier.fillMaxWidth(), BtnStyle.Red, icon = ZIcons.Play, onClick = onStart)
@@ -373,13 +377,50 @@ private fun LevelCard(l: WimHofLevel, selected: Boolean, expertRounds: Int, modi
                     stringResource(R.string.wh_level_meta, pluralStringResource(R.plurals.wh_rounds, l.defaultRounds, l.defaultRounds), stringResource(R.string.wh_breaths_range, l.breathsLabel)),
                     style = ZenType.Muted.copy(fontSize = 12.5.sp), modifier = Modifier.padding(top = 3.dp),
                 )
-                Spacer(Modifier.height(6.dp))
-                Text(levelPace(l.id), fontFamily = Inter, fontSize = 11.5.sp, color = Zen.Faint)
             }
         }
         if (selected) Box(Modifier.align(Alignment.TopEnd).size(20.dp).background(Zen.Pine, CircleShape), contentAlignment = Alignment.Center) {
-            ZIconView(ZIcons.Check, Color.White, size = 12.dp, strokeWidth = 3f)
+            ZIconView(ZIcons.Check, Zen.OnPine, size = 12.dp, strokeWidth = 3f)
         }
+    }
+}
+
+/** The user's own preset: rounds and breaths per round, saved and selected on every change. */
+@Composable
+private fun CustomCard(selected: Boolean, rounds: Int, breaths: Int, onPick: () -> Unit, onChange: (Int, Int) -> Unit) {
+    val shape = Zen.RMd
+    Box(
+        Modifier
+            .fillMaxWidth()
+            .padding(bottom = 10.dp)
+            .zenShadow(shape)
+            .clip(shape)
+            .background(Zen.Surface)
+            .border(1.5.dp, if (selected) Zen.Pine else Color.Transparent, shape)
+            .semantics { this.selected = selected }
+            .tap(onClick = onPick)
+            .padding(14.dp)
+    ) {
+        Column(Modifier.fillMaxWidth()) {
+            Text(stringResource(R.string.wh_custom), fontFamily = Inter, fontWeight = FontWeight.SemiBold, fontSize = 15.sp, letterSpacing = (-0.01).em, color = Zen.Ink)
+            Text(stringResource(R.string.wh_custom_desc), style = ZenType.Muted.copy(fontSize = 12.5.sp), modifier = Modifier.padding(top = 3.dp, bottom = 4.dp))
+            CountRow(stringResource(R.string.wh_spec_rounds), rounds, 1, WimHofLevel.CUSTOM_MAX_ROUNDS, 1) { onChange(it, breaths) }
+            CountRow(stringResource(R.string.wh_spec_breaths), breaths, WimHofLevel.CUSTOM_MIN_BREATHS, WimHofLevel.CUSTOM_MAX_BREATHS, 5) { onChange(rounds, it) }
+        }
+        if (selected) Box(Modifier.align(Alignment.TopEnd).size(20.dp).background(Zen.Pine, CircleShape), contentAlignment = Alignment.Center) {
+            ZIconView(ZIcons.Check, Zen.OnPine, size = 12.dp, strokeWidth = 3f)
+        }
+    }
+}
+
+@Composable
+private fun CountRow(label: String, value: Int, min: Int, max: Int, step: Int, onChange: (Int) -> Unit) {
+    Row(Modifier.fillMaxWidth().padding(top = 8.dp), verticalAlignment = Alignment.CenterVertically) {
+        Text(label, fontFamily = Inter, fontSize = 13.5.sp, color = Zen.Muted, modifier = Modifier.weight(1f))
+        StepBtn(ZIcons.Minus, stringResource(R.string.wh_less, label)) { onChange((value - step).coerceIn(min, max)) }
+        Text("$value", fontFamily = Inter, fontWeight = FontWeight.SemiBold, fontSize = 14.5.sp, color = Zen.Pine,
+            textAlign = TextAlign.Center, modifier = Modifier.width(48.dp))
+        StepBtn(ZIcons.Plus, stringResource(R.string.wh_more, label)) { onChange((value + step).coerceIn(min, max)) }
     }
 }
 
@@ -389,6 +430,23 @@ private fun StepBtn(icon: app.swisszen.ui.components.ZIcon, label: String, onCli
         Modifier.size(28.dp).clip(CircleShape).background(Zen.PineSoft).semantics { contentDescription = label }.tap(onClick = onClick),
         contentAlignment = Alignment.Center,
     ) { ZIconView(icon, Zen.Pine, size = 14.dp, strokeWidth = 2.4f) }
+}
+
+/** Power-breath tempo row with -/+ in 0.1 s steps. */
+@Composable
+private fun TempoRow(label: String, seconds: Double, onChange: (Double) -> Unit) {
+    val tenths = (seconds * 10).roundToInt()
+    fun step(d: Int) = onChange((tenths + d).coerceIn((WimHofEngine.TEMPO_MIN * 10).roundToInt(), (WimHofEngine.TEMPO_MAX * 10).roundToInt()) / 10.0)
+    Column {
+        Row(Modifier.fillMaxWidth().padding(horizontal = 2.dp, vertical = 6.dp), verticalAlignment = Alignment.CenterVertically) {
+            Text(label, fontFamily = Inter, fontSize = 13.5.sp, color = Zen.Muted, modifier = Modifier.weight(1f))
+            StepBtn(ZIcons.Minus, stringResource(R.string.wh_tempo_shorter, label)) { step(-1) }
+            Text(stringResource(R.string.wh_seconds_value, "%.1f".format(tenths / 10.0)), fontFamily = Inter, fontWeight = FontWeight.SemiBold, fontSize = 14.5.sp,
+                color = Zen.Ink, textAlign = TextAlign.Center, modifier = Modifier.width(64.dp))
+            StepBtn(ZIcons.Plus, stringResource(R.string.wh_tempo_longer, label)) { step(+1) }
+        }
+        Box(Modifier.fillMaxWidth().height(1.dp).background(Zen.Line))
+    }
 }
 
 @Composable

@@ -98,8 +98,8 @@ private fun WimHofSession(initial: AppSettings, onClose: () -> Unit) {
     val settings by vm.settings.collectAsStateWithLifecycle()
     val haptic = LocalHapticFeedback.current
     val engine = remember {
-        val level = WimHofLevel.byId(initial.whLevel)
-        WimHofEngine(level, if (level.id == "exp") initial.whExpertRounds else level.defaultRounds)
+        val level = WimHofLevel.resolve(initial.whLevel, initial.whCustomRounds, initial.whCustomBreaths)
+        WimHofEngine(level, if (level.id == "exp") initial.whExpertRounds else level.defaultRounds, initial.whInhale, initial.whExhale)
     }
     val startedAt = remember { System.currentTimeMillis() }
     var frame by remember { mutableIntStateOf(0) }       // recomposition clock
@@ -108,8 +108,8 @@ private fun WimHofSession(initial: AppSettings, onClose: () -> Unit) {
 
     fun onEntered(p: WhPhase) {
         if (sound) when (p) {
-            WhPhase.IN -> vm.breath(true, engine.level.inhale, force = true)
-            WhPhase.OUT -> vm.breath(false, engine.level.exhale, force = true)
+            WhPhase.IN -> vm.breath(true, engine.inhale, force = true)
+            WhPhase.OUT -> vm.breath(false, engine.exhale, force = true)
             WhPhase.LAST_IN, WhPhase.REC_IN -> vm.breath(true, WimHofEngine.LAST_IN, force = true)
             WhPhase.LAST_OUT -> vm.breath(false, WimHofEngine.LAST_OUT, force = true)
             WhPhase.REC_OUT -> vm.breath(false, WimHofEngine.REC_OUT, force = true)
@@ -251,7 +251,7 @@ private fun Summary(e: WimHofEngine, onDone: () -> Unit) {
     Column(Modifier.fillMaxSize().verticalScroll(rememberScrollState())) {
         Box(
             Modifier.padding(top = 30.dp).size(96.dp).align(Alignment.CenterHorizontally).clip(CircleShape)
-                .background(Brush.radialGradient(listOf(Color.White, Color(0xFFE6F0F4), Color(0xFFC3DAE3)), center = Offset(100f, 80f))),
+                .background(Brush.radialGradient(Zen.Halo, center = Offset(100f, 80f))),
             contentAlignment = Alignment.Center,
         ) { ZIconView(ZIcons.Check, Zen.Pine, size = 40.dp, strokeWidth = 1.8f) }
         Text(stringResource(R.string.wh_well_done), fontFamily = Inter, fontWeight = FontWeight.Medium, fontSize = 28.sp, color = Zen.Pine,

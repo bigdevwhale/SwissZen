@@ -70,6 +70,7 @@ import app.swisszen.ui.timeOf
 import app.swisszen.ui.toLocalDateTime
 import app.swisszen.ui.theme.Inter
 import app.swisszen.ui.theme.Zen
+import app.swisszen.ui.theme.ZenLight
 import app.swisszen.ui.theme.ZenType
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.SharingStarted
@@ -196,7 +197,7 @@ private fun Knife(blades: List<Blade>, onOpen: (String) -> Unit) {
             Box(
                 Modifier.padding(start = 6.dp).width(16.dp).fillMaxHeight()
                     .clip(RoundedCornerShape(12.dp))
-                    .background(Brush.horizontalGradient(listOf(Color(0xFF2A6550), Zen.Pine, Color(0xFF173D2F))))
+                    .background(Brush.horizontalGradient(listOf(Color(0xFF2A6550), ZenLight.pine, Color(0xFF173D2F))))
             )
         }
         Column(Modifier.padding(start = 30.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
@@ -223,7 +224,7 @@ private fun BladeCard(b: Blade, unfold: Float, onClick: () -> Unit) {
         Row(
             Modifier.fillMaxWidth().zenShadow(shape).clip(shape)
                 .background(Brush.linearGradient(
-                    0f to Zen.Surface, .62f to Zen.Surface, .88f to Color(0xFFEFF5F8), 1f to Zen.Surface,
+                    0f to Zen.Surface, .62f to Zen.Surface, .88f to Zen.IceHi, 1f to Zen.Surface,
                 ))
                 .tap(onClick = onClick)
                 .padding(16.dp),

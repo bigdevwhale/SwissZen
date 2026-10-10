@@ -8,6 +8,7 @@ import android.media.SoundPool
 import app.swisszen.R
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.Executors
+import java.util.concurrent.TimeUnit
 import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.exp
@@ -27,7 +28,9 @@ class SoundSynth(context: Context) {
     private val pool = SoundPool.Builder().setMaxStreams(2).setAudioAttributes(attrs).build()
     private val bellId = pool.load(context, R.raw.bell, 1)
     private val cache = ConcurrentHashMap<String, ShortArray>()
-    private val worker = Executors.newSingleThreadExecutor()
+    // One thread owns every breath track, so creating, starting and releasing them never race.
+    private val worker = Executors.newSingleThreadScheduledExecutor()
+    private var current: AudioTrack? = null
 
     fun bell(volume: Float = 0.8f) {
         pool.play(bellId, volume, volume, 1, 0, 1f)
@@ -41,7 +44,24 @@ class SoundSynth(context: Context) {
         }
     }
 
+    // Each track is released on a timer rather than via a playback marker: the marker callback doesn't
+    // always fire, and leaked tracks pile up until Android refuses new ones and the breath goes silent.
     private fun play(pcm: ShortArray) {
+        current?.let(::release)
+        val track = runCatching { build(pcm) }.getOrNull() ?: return
+        current = track
+        track.play()
+        worker.schedule({ release(track) }, pcm.size * 1000L / RATE + 250, TimeUnit.MILLISECONDS)
+    }
+
+    private fun release(track: AudioTrack) {
+        if (current === track) current = null
+        if (track.state == AudioTrack.STATE_UNINITIALIZED) return // already released
+        runCatching { track.stop() }
+        track.release()
+    }
+
+    private fun build(pcm: ShortArray): AudioTrack {
         val track = AudioTrack.Builder()
             .setAudioAttributes(attrs)
             .setAudioFormat(AudioFormat.Builder()
@@ -52,13 +72,8 @@ class SoundSynth(context: Context) {
             .setBufferSizeInBytes(pcm.size * 2)
             .setTransferMode(AudioTrack.MODE_STATIC)
             .build()
-        track.write(pcm, 0, pcm.size)
-        track.setNotificationMarkerPosition(pcm.size - 1)
-        track.setPlaybackPositionUpdateListener(object : AudioTrack.OnPlaybackPositionUpdateListener {
-            override fun onMarkerReached(t: AudioTrack) { t.release() }
-            override fun onPeriodicNotification(t: AudioTrack) {}
-        })
-        track.play()
+        if (track.write(pcm, 0, pcm.size) < 0) { track.release(); error("write failed") }
+        return track
     }
 
     private fun render(inhale: Boolean, seconds: Double): ShortArray {

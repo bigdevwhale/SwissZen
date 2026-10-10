@@ -25,17 +25,37 @@ class WimHofEngineTest {
         with(WimHofLevel.MEDIUM) { assertEquals(3, defaultRounds); assertTrue(breaths.all { it in 30..35 }); assertEquals("1:30–2:00", ladder[2]) }
         with(WimHofLevel.ADVANCED) { assertEquals(4, defaultRounds); assertTrue(breaths.all { it in 35..40 }); assertEquals(listOf(60, 90, 120, 150), holds) }
         with(WimHofLevel.EXPERT) { assertEquals(4, defaultRounds); assertEquals(5, maxRounds); assertTrue(breaths.all { it in 40..50 }); assertEquals("3:00+", ladder[3]) }
-        // faster levels breathe faster
-        val tempos = WimHofLevel.ALL.map { it.inhale + it.exhale }
-        assertEquals(tempos.sortedDescending(), tempos)
+    }
+
+    @Test fun customPresetRepeatsBreathsAndRampsHolds() {
+        val l = WimHofLevel.custom(rounds = 5, breaths = 25)
+        assertEquals(5, l.defaultRounds)
+        assertEquals(List(5) { 25 }, l.breaths)
+        assertEquals(listOf(60, 90, 120, 150, 180), l.holds)
+        assertEquals("3:00", l.ladder[4])
+        // out-of-range input is clamped, not crashed on
+        with(WimHofLevel.custom(rounds = 99, breaths = 1)) {
+            assertEquals(WimHofLevel.CUSTOM_MAX_ROUNDS, defaultRounds)
+            assertTrue(breaths.all { it == WimHofLevel.CUSTOM_MIN_BREATHS })
+        }
+        val e = WimHofEngine(l, l.defaultRounds)
+        runUntil(e, WhPhase.IN)
+        assertEquals(25 * (WimHofEngine.DEFAULT_INHALE + WimHofEngine.DEFAULT_EXHALE), runUntil(e, WhPhase.LAST_IN), 0.1)
+    }
+
+    @Test fun customTempoIsUsedForEveryBreath() {
+        val e = WimHofEngine(WimHofLevel.EXPERT, inhale = 2.0, exhale = 1.2)
+        runUntil(e, WhPhase.IN)
+        assertEquals(2.0, e.duration(WhPhase.IN), 0.0)
+        assertEquals(1.2, e.duration(WhPhase.OUT), 0.0)
+        assertEquals(40 * 3.2, runUntil(e, WhPhase.LAST_IN), 0.1)
     }
 
     @Test fun powerBreathingTakesBreathsTimesTempo() {
-        val level = WimHofLevel.BEGINNER
-        val e = WimHofEngine(level)
+        val e = WimHofEngine(WimHofLevel.BEGINNER)
         runUntil(e, WhPhase.IN)
         val t = runUntil(e, WhPhase.LAST_IN)
-        assertEquals(30 * (level.inhale + level.exhale), t, 0.1)
+        assertEquals(30 * (WimHofEngine.DEFAULT_INHALE + WimHofEngine.DEFAULT_EXHALE), t, 0.1)
         assertEquals(30, e.breath)
     }
 

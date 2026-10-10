@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Matches ZenDark.bg so there's no flash before Compose draws. -->
+    <color name="window_bg">#111513</color>
+</resources>

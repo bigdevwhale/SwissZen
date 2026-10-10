@@ -70,7 +70,7 @@ fun Modifier.tap(role: Role = Role.Button, enabled: Boolean = true, onClick: () 
 
 /** Soft pine-tinted shadow like the prototype's --sh-1. */
 fun Modifier.zenShadow(shape: Shape, elevation: Dp = 8.dp) =
-    shadow(elevation, shape, clip = false, ambientColor = Zen.Pine.copy(alpha = .25f), spotColor = Zen.Pine.copy(alpha = .25f))
+    shadow(elevation, shape, clip = false, ambientColor = Zen.Shadow.copy(alpha = .25f), spotColor = Zen.Shadow.copy(alpha = .25f))
 
 @Composable
 fun ZenCard(modifier: Modifier = Modifier, shape: Shape = Zen.RLg, padding: PaddingValues = PaddingValues(18.dp), content: @Composable ColumnScope.() -> Unit) {
@@ -94,7 +94,7 @@ fun Orb(modifier: Modifier, scale: Float, dim: Float = 0f) {
         // drop shadow
         drawCircle(
             brush = Brush.radialGradient(
-                listOf(Zen.Pine.copy(alpha = .22f), Color.Transparent),
+                listOf(Zen.Shadow.copy(alpha = .22f), Color.Transparent),
                 center = c + Offset(0f, r * .32f), radius = r * 1.05f,
             ),
             radius = r * 1.05f, center = c + Offset(0f, r * .32f),
@@ -103,15 +103,15 @@ fun Orb(modifier: Modifier, scale: Float, dim: Float = 0f) {
         val reach = hypot(d * .62f, d * .70f)
         drawCircle(
             brush = Brush.radialGradient(
-                0f to Color.White, .22f to Color(0xFFEEF5F8), .55f to Color(0xFFC9DFE8),
-                .82f to Color(0xFF94BACA), 1f to Color(0xFF7FA8BA),
+                0f to Zen.Orb[0], .22f to Zen.Orb[1], .55f to Zen.Orb[2],
+                .82f to Zen.Orb[3], 1f to Zen.Orb[4],
                 center = origin, radius = reach,
             ),
             radius = r, center = c,
         )
         // inner bottom shade
         drawCircle(
-            brush = Brush.radialGradient(listOf(Color.Transparent, Zen.Pine.copy(alpha = .10f)), center = c - Offset(0f, r * .25f), radius = r * 1.25f),
+            brush = Brush.radialGradient(listOf(Color.Transparent, Zen.Shadow.copy(alpha = .10f)), center = c - Offset(0f, r * .25f), radius = r * 1.25f),
             radius = r, center = c,
         )
         if (dim > 0f) drawCircle(Zen.Bg.copy(alpha = .35f * dim), radius = r, center = c)
@@ -215,7 +215,7 @@ fun Segmented(options: List<String>, selected: Int, modifier: Modifier = Modifie
 @Composable
 fun ZenSwitch(checked: Boolean, red: Boolean = false, label: String, onChange: (Boolean) -> Unit) {
     val x by animateFloatAsState(if (checked) 20f else 0f, label = "switch")
-    val bg by animateColorAsState(if (!checked) Color(0xFFD9D5CC) else if (red) Zen.Red else Zen.Pine, label = "switchBg")
+    val bg by animateColorAsState(if (!checked) Zen.Track else if (red) Zen.Red else Zen.Pine, label = "switchBg")
     Box(
         Modifier
             .size(52.dp, 32.dp)

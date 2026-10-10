@@ -45,6 +45,7 @@ import app.swisszen.R
 import app.swisszen.bell.BellAlarms
 import app.swisszen.data.AppSettings
 import app.swisszen.ui.Language
+import app.swisszen.ui.ThemeMode
 import app.swisszen.ui.components.RoundIconButton
 import app.swisszen.ui.components.SectionHeader
 import app.swisszen.ui.components.ZIcons
@@ -71,6 +72,7 @@ fun SettingsScreen(onBack: () -> Unit) {
     val s by vm.settings.collectAsStateWithLifecycle()
     val context = LocalContext.current
     var lang by remember { mutableStateOf(Language.current()) }
+    var theme by remember { mutableStateOf(ThemeMode.current()) }
     val version = remember { context.packageManager.getPackageInfo(context.packageName, 0).versionName.orEmpty() }
     BackHandler(onBack = onBack)
 
@@ -85,25 +87,16 @@ fun SettingsScreen(onBack: () -> Unit) {
         }
 
         SectionHeader(stringResource(R.string.settings_language))
-        ZenCard(Modifier.fillMaxWidth(), padding = androidx.compose.foundation.layout.PaddingValues(horizontal = 16.dp, vertical = 4.dp)) {
-            listOf(Language.SYSTEM to stringResource(R.string.lang_system), Language.EN to stringResource(R.string.lang_en), Language.RU to stringResource(R.string.lang_ru))
-                .forEachIndexed { i, (tag, label) ->
-                    if (i > 0) HorizontalDivider(color = Zen.Line)
-                    val on = lang == tag
-                    Row(
-                        Modifier.fillMaxWidth().semantics { selected = on }.tap(role = Role.RadioButton) {
-                            lang = tag; Language.set(tag) // recreates the activity in the new language
-                        }.padding(vertical = 15.dp, horizontal = 2.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                    ) {
-                        Text(label, style = ZenType.Body, modifier = Modifier.weight(1f))
-                        Box(
-                            Modifier.size(20.dp).clip(CircleShape).border(2.dp, if (on) Zen.Pine else Zen.Line, CircleShape),
-                            contentAlignment = Alignment.Center,
-                        ) { if (on) Box(Modifier.size(10.dp).background(Zen.Pine, CircleShape)) }
-                    }
-                }
-        }
+        RadioCard(
+            listOf(Language.SYSTEM to stringResource(R.string.lang_system), Language.EN to stringResource(R.string.lang_en), Language.RU to stringResource(R.string.lang_ru)),
+            lang,
+        ) { lang = it; Language.set(it) } // recreates the activity in the new language
+
+        SectionHeader(stringResource(R.string.settings_theme))
+        RadioCard(
+            listOf(ThemeMode.SYSTEM to stringResource(R.string.theme_system), ThemeMode.LIGHT to stringResource(R.string.theme_light), ThemeMode.DARK to stringResource(R.string.theme_dark)),
+            theme,
+        ) { theme = it; ThemeMode.set(context, it) }
 
         SectionHeader(stringResource(R.string.settings_feedback))
         ZenCard(Modifier.fillMaxWidth()) {
@@ -124,6 +117,27 @@ fun SettingsScreen(onBack: () -> Unit) {
         ZenCard(Modifier.fillMaxWidth()) {
             Text(stringResource(R.string.settings_about_text, version), fontFamily = Inter, fontWeight = FontWeight.Medium, fontSize = 14.sp, color = Zen.Ink)
             Text(stringResource(R.string.settings_disclaimer), style = ZenType.Muted, modifier = Modifier.padding(top = 10.dp))
+        }
+    }
+}
+
+@Composable
+private fun <T> RadioCard(options: List<Pair<T, String>>, selected: T, onSelect: (T) -> Unit) {
+    ZenCard(Modifier.fillMaxWidth(), padding = androidx.compose.foundation.layout.PaddingValues(horizontal = 16.dp, vertical = 4.dp)) {
+        options.forEachIndexed { i, (value, label) ->
+            if (i > 0) HorizontalDivider(color = Zen.Line)
+            val on = selected == value
+            Row(
+                Modifier.fillMaxWidth().semantics { this.selected = on }.tap(role = Role.RadioButton) { onSelect(value) }
+                    .padding(vertical = 15.dp, horizontal = 2.dp),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Text(label, style = ZenType.Body, modifier = Modifier.weight(1f))
+                Box(
+                    Modifier.size(20.dp).clip(CircleShape).border(2.dp, if (on) Zen.Pine else Zen.Line, CircleShape),
+                    contentAlignment = Alignment.Center,
+                ) { if (on) Box(Modifier.size(10.dp).background(Zen.Pine, CircleShape)) }
+            }
         }
     }
 }
