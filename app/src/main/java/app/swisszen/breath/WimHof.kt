@@ -134,13 +134,12 @@ class WimHofEngine(
     // ---- Visual helpers (orb scale 0..1 of the stage, ring progress 0..1) ----
     private fun p() = if (duration().isInfinite() || duration() == 0.0) 0.0 else (t / duration()).coerceIn(0.0, 1.0)
     private fun eInOut(x: Double) = 0.5 - 0.5 * cos(PI * x)
-    private fun eOut(x: Double) = 1 - (1 - x) * (1 - x)
 
     fun orbScale(): Float = when (phase) {
         WhPhase.INTRO -> S_MIN + 0.03 * sin(total * 2.2)
         WhPhase.IN, WhPhase.LAST_IN -> S_MIN + (S_MAX - S_MIN) * eInOut(p())
-        WhPhase.OUT, WhPhase.REC_OUT -> S_MAX - (S_MAX - S_MIN) * eOut(p())
-        WhPhase.LAST_OUT -> S_MAX - (S_MAX - S_EMPTY) * eOut(p())
+        WhPhase.OUT, WhPhase.REC_OUT -> S_MAX - (S_MAX - S_MIN) * eInOut(p())
+        WhPhase.LAST_OUT -> S_MAX - (S_MAX - S_EMPTY) * eInOut(p())
         WhPhase.HOLD -> S_EMPTY + 0.006 * sin(t * 1.3)
         WhPhase.REC_IN -> S_EMPTY + (S_MAX - S_EMPTY) * eInOut(p())
         WhPhase.REC_HOLD -> S_MAX + 0.008 * sin(t * 1.5)

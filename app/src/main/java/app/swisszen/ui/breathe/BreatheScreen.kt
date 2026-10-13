@@ -36,6 +36,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -43,6 +44,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.withFrameNanos
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -92,7 +94,6 @@ import app.swisszen.ui.mmss2
 import app.swisszen.ui.theme.Inter
 import app.swisszen.ui.theme.Zen
 import app.swisszen.ui.theme.ZenType
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -151,19 +152,33 @@ class GuidedState {
     // never the engine fields, otherwise Compose would not notice phase changes.
     var phase by mutableIntStateOf(0)
     var left by mutableIntStateOf(0)
-    var phaseCount by mutableIntStateOf(0)   // increments on every new phase, keys the orb animation
+    var frac by mutableFloatStateOf(0f)      // part of the current second already elapsed, 0..1
     private var engineSessionLeft by mutableIntStateOf(0)
     val sessionLeft get() = if (engine != null) engineSessionLeft else if (finished) 0 else minutes * 60
 
-    fun sync(newPhase: Boolean = false) {
+    fun sync() {
         val e = engine ?: return
         phase = e.phase; left = e.left; engineSessionLeft = e.sessionLeft
-        if (newPhase) phaseCount++
+    }
+
+    /** Seconds of the current phase still to go, with the sub-second part. */
+    val phaseLeft get() = (left - frac).coerceAtLeast(0f)
+
+    /** Orb scale from the same clock as the countdown: grows on inhale, shrinks on exhale, stays put on holds. */
+    fun orbScale(): Float {
+        val len = preset.pattern[phase].toFloat()
+        val p = breathEase.transform(((len - phaseLeft) / len).coerceIn(0f, 1f))
+        return when (phase) {
+            0 -> G_MIN + (1f - G_MIN) * p
+            1 -> 1f
+            2 -> 1f - (1f - G_MIN) * p
+            else -> G_MIN
+        }
     }
 
     fun stop(vm: BreatheViewModel) {
         engine?.let { e -> if (!finished) vm.log(SessionLog.GUIDED, startedAt, minutes * 60 - e.sessionLeft, preset.name.lowercase()) }
-        engine = null; running = false; finished = false
+        engine = null; running = false; finished = false; frac = 0f
     }
 }
 
@@ -184,36 +199,40 @@ private fun ColumnScope.GuidedPanel(g: GuidedState, vm: BreatheViewModel, settin
     val idle = rememberInfiniteTransition(label = "idle")
     val idleScale by idle.animateFloat(.58f, .65f, infiniteRepeatable(tween(3000, easing = LinearEasing), RepeatMode.Reverse), label = "idleScale")
 
-    // One-second clock while running.
+    // Frame clock while running: the countdown and the orb both read it, so they cannot drift apart.
+    // Frame time is not stretched by the system animation-speed setting, unlike a tween.
     LaunchedEffect(g.running, g.engine) {
         val e = g.engine ?: return@LaunchedEffect
-        while (g.running) {
-            delay(1000)
-            val newPhase = e.tickSecond()
-            g.sync(newPhase)
-            if (e.done) {
-                vm.log(SessionLog.GUIDED, g.startedAt, g.minutes * 60, g.preset.name.lowercase())
-                toast(doneMsg)
-                g.running = false; g.finished = true
-                g.engine = null // cancels this effect; the orb effect settles the circle
-            } else if (newPhase) {
-                if (settings.haptics) haptic.performHapticFeedback(HapticFeedbackType.SegmentTick)
+        if (!g.running) return@LaunchedEffect
+        fun breathSound() { if (g.phase == 0 || g.phase == 2) vm.breath(g.phase == 0, g.phaseLeft.toDouble()) }
+        breathSound() // start or resume mid-phase
+        var last = withFrameNanos { it }
+        while (true) {
+            val now = withFrameNanos { it }
+            g.frac += (now - last) / 1e9f
+            last = now
+            while (g.frac >= 1f) {
+                g.frac -= 1f
+                val newPhase = e.tickSecond()
+                g.sync()
+                if (e.done) {
+                    vm.log(SessionLog.GUIDED, g.startedAt, g.minutes * 60, g.preset.name.lowercase())
+                    toast(doneMsg)
+                    orb.snapTo(g.orbScale())
+                    g.frac = 0f
+                    g.running = false; g.finished = true
+                    g.engine = null // the orb effect below settles the circle
+                    return@LaunchedEffect
+                }
+                if (newPhase) {
+                    if (settings.haptics) haptic.performHapticFeedback(HapticFeedbackType.SegmentTick)
+                    breathSound()
+                }
             }
         }
     }
-    // Orb follows the phase: grow on inhale, shrink on exhale, stay put on holds.
-    // Re-runs on every phase change and on pause/resume (resuming animates over the seconds left).
     val e = g.engine
-    LaunchedEffect(e, g.phaseCount, g.running) {
-        if (e == null) { if (g.finished) orb.animateTo(0.6f, tween(2000)) else orb.stop(); return@LaunchedEffect }
-        if (!g.running) { orb.stop(); return@LaunchedEffect }
-        val phase = g.phase
-        val target = if (phase == 0 || phase == 1) 1f else G_MIN
-        if (phase == 0 || phase == 2) {
-            vm.breath(phase == 0, g.left.toDouble())
-            orb.animateTo(target, tween(g.left * 1000, easing = breathEase))
-        } else orb.snapTo(target)
-    }
+    LaunchedEffect(g.finished) { if (g.finished) orb.animateTo(0.6f, tween(2000)) }
 
     val pattern = g.preset.pattern
     FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -233,7 +252,7 @@ private fun ColumnScope.GuidedPanel(g: GuidedState, vm: BreatheViewModel, settin
             drawCircle(Zen.Ice2.copy(alpha = .6f), radius = size.minDimension / 2 * .56f, style = Stroke(1.5.dp.toPx()))
         }
         val active = e != null
-        Orb(Modifier.fillMaxSize(), if (active) orb.value else if (g.finished) orb.value else idleScale)
+        Orb(Modifier.fillMaxSize(), if (active) g.orbScale() else if (g.finished) orb.value else idleScale)
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             val big = when {
                 e != null -> "${g.left}"
@@ -291,10 +310,10 @@ private fun ColumnScope.GuidedPanel(g: GuidedState, vm: BreatheViewModel, settin
             e == null -> {
                 g.finished = false
                 g.engine = GuidedPaceEngine(g.preset, g.minutes)
-                g.sync(newPhase = true)
+                g.frac = 0f
+                g.sync()
                 g.startedAt = System.currentTimeMillis()
                 g.running = true
-                scope.launch { orb.snapTo(G_MIN) }
             }
             else -> g.running = !g.running
         }
