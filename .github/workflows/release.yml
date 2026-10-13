@@ -53,6 +53,7 @@ jobs:
         run: |
           mkdir -p dist
           cp app/build/outputs/apk/release/app-release.apk "dist/SwissZen-v${{ steps.v.outputs.name }}.apk"
+          cp app/build/outputs/apk/release/app-release.apk dist/SwissZen.apk
           if [ -z "$SIGNING_KEYSTORE_BASE64" ]; then
             echo "::warning::No signing secrets set — the APK is signed with the CI debug key."
           fi
