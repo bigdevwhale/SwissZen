@@ -9,6 +9,7 @@
 *One app, five small instruments. Pick the one that fits the moment — a minute is enough.*
 
 [![Android CI](https://github.com/bigdevwhale/SwissZen/actions/workflows/android.yml/badge.svg)](https://github.com/bigdevwhale/SwissZen/actions/workflows/android.yml)
+[![Google Play](https://img.shields.io/badge/Google_Play-get_it-34A853?logo=googleplay&logoColor=white)](https://play.google.com/store/apps/details?id=app.swisszen)
 [![Release](https://img.shields.io/github/v/release/bigdevwhale/SwissZen?color=E30613&label=download&logo=android)](https://github.com/bigdevwhale/SwissZen/releases/latest)
 ![Android 8.0+](https://img.shields.io/badge/Android-8.0%2B-1E4D3B?logo=android&logoColor=white)
 ![Kotlin](https://img.shields.io/badge/Kotlin-Jetpack%20Compose-7F52FF?logo=kotlin&logoColor=white)
@@ -69,7 +70,9 @@ Every screen, practice and prompt is translated. Switch in **Settings → Langua
 
 ## Download
 
-Grab the latest APK from **[Releases](https://github.com/bigdevwhale/SwissZen/releases/latest)**, or the debug APK attached to any [CI run](https://github.com/bigdevwhale/SwissZen/actions/workflows/android.yml).
+**[Get it on Google Play](https://play.google.com/store/apps/details?id=app.swisszen)**.
+
+Or grab the latest APK from **[Releases](https://github.com/bigdevwhale/SwissZen/releases/latest)**, or the debug APK attached to any [CI run](https://github.com/bigdevwhale/SwissZen/actions/workflows/android.yml).
 Android 8.0 (API 26) or newer.
 
 ## Under the hood
@@ -106,7 +109,7 @@ cd SwissZen
 ### CI / releases
 
 - **Android CI** (`.github/workflows/android.yml`) — on every push and PR: unit tests, lint (missing translations fail the build), debug APK uploaded as an artifact.
-- **Release** (`.github/workflows/release.yml`) — push a tag like `v1.0.0` (or run it manually) to build a signed release APK and publish it as a GitHub Release.
+- **Release** (`.github/workflows/release.yml`) — push a tag like `v1.0.0` (or run it manually) to build a signed release APK and AAB and publish them as a GitHub Release; the AAB is what goes to Google Play.
 
 ## License
 

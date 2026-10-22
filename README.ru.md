@@ -9,6 +9,7 @@
 *Одно приложение — пять маленьких инструментов. Выбери тот, что подходит моменту. Хватит и минуты.*
 
 [![Android CI](https://github.com/bigdevwhale/SwissZen/actions/workflows/android.yml/badge.svg)](https://github.com/bigdevwhale/SwissZen/actions/workflows/android.yml)
+[![Google Play](https://img.shields.io/badge/Google_Play-скачать-34A853?logo=googleplay&logoColor=white)](https://play.google.com/store/apps/details?id=app.swisszen)
 [![Release](https://img.shields.io/github/v/release/bigdevwhale/SwissZen?color=E30613&label=скачать&logo=android)](https://github.com/bigdevwhale/SwissZen/releases/latest)
 ![Android 8.0+](https://img.shields.io/badge/Android-8.0%2B-1E4D3B?logo=android&logoColor=white)
 ![Языки](https://img.shields.io/badge/lang-EN%20%7C%20RU-7FA8BA)
@@ -64,7 +65,9 @@ SwissZen — наоборот, карманный нож: открыл, раск
 
 ## Скачать
 
-Последний APK — в **[Releases](https://github.com/bigdevwhale/SwissZen/releases/latest)**, отладочный APK — в артефактах любого [запуска CI](https://github.com/bigdevwhale/SwissZen/actions/workflows/android.yml). Нужен Android 8.0 или новее.
+**[Скачать в Google Play](https://play.google.com/store/apps/details?id=app.swisszen)**.
+
+Или последний APK — в **[Releases](https://github.com/bigdevwhale/SwissZen/releases/latest)**, отладочный APK — в артефактах любого [запуска CI](https://github.com/bigdevwhale/SwissZen/actions/workflows/android.yml). Нужен Android 8.0 или новее.
 
 ## Сборка
 
