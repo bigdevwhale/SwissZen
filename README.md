@@ -50,7 +50,7 @@ Home ties it together: today's minutes breathed, bells heard and lines written, 
 | Medium · classic | 3 | 30–35 | 1:00 → 1:30 → 1:30–2:00 |
 | Advanced | 4 | 35–40 | 1:00 → 1:30 → 2:00 → 2:30 |
 | Expert | 4–5 | 40–50 | 1:30 → 2:00 → 2:30 → 3:00+ |
-| Custom preset | 1–6 | 10–60 | 1:00 → 1:30 → … → 3:00 |
+| Custom preset | 1–6 | 10–60 | your first-round target (0:15–5:00, default 1:00), then +0:30 per round up to round 5 |
 
 The breathing tempo is the same for every level: **2.0 s in / 1.5 s out** by default, adjustable in 0.1 s steps (0.5–4 s) right on the Wim Hof screen.
 

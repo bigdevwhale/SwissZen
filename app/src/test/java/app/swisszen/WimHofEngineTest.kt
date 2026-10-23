@@ -38,6 +38,8 @@ class WimHofEngineTest {
             assertEquals(WimHofLevel.CUSTOM_MAX_ROUNDS, defaultRounds)
             assertTrue(breaths.all { it == WimHofLevel.CUSTOM_MIN_BREATHS })
         }
+        assertEquals(listOf(120, 150, 180, 210, 240, 240), WimHofLevel.custom(rounds = 6, breaths = 30, hold = 120).holds)
+        assertEquals(WimHofLevel.CUSTOM_MAX_HOLD, WimHofLevel.custom(rounds = 1, breaths = 30, hold = 9999).holds[0])
         val e = WimHofEngine(l, l.defaultRounds)
         runUntil(e, WhPhase.IN)
         assertEquals(25 * (WimHofEngine.DEFAULT_INHALE + WimHofEngine.DEFAULT_EXHALE), runUntil(e, WhPhase.LAST_IN), 0.1)

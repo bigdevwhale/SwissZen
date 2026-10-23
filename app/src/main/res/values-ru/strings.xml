@@ -92,7 +92,7 @@
     <string name="wh_advanced">Продвинутый</string>
     <string name="wh_expert">Эксперт</string>
     <string name="wh_custom">Свой пресет</string>
-    <string name="wh_custom_desc">Свои раунды и число вдохов. Сохраняется сам.</string>
+    <string name="wh_custom_desc">Свои раунды, число вдохов и цель задержки. Сохраняется сам.</string>
     <string name="wh_less">%1$s: меньше</string>
     <string name="wh_more">%1$s: больше</string>
     <string name="wh_level_meta">%1$s · %2$s</string>
@@ -109,6 +109,7 @@
     <string name="wh_safety">Только сидя или лёжа. Головокружение и покалывание — это нормально. Никогда не практикуй в воде, рядом с водой или за рулём.</string>
     <string name="wh_spec_rounds">Раунды</string>
     <string name="wh_spec_breaths">Вдохов за раунд</string>
+    <string name="wh_spec_hold">Цель задержки, 1-й раунд</string>
     <string name="wh_spec_inhale">Вдох</string>
     <string name="wh_spec_exhale">Выдох</string>
     <string name="wh_seconds_value">%1$s с</string>

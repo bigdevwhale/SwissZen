@@ -32,21 +32,29 @@ data class WimHofLevel(
         val ALL = listOf(BEGINNER, MEDIUM, ADVANCED, EXPERT)
         fun byId(id: String) = ALL.firstOrNull { it.id == id } ?: BEGINNER
 
-        /** The user's own preset: same breath count every round, hold targets ramp 1:00 → 3:00. */
+        /**
+         * The user's own preset: same breath count every round; hold targets start at the user's
+         * first-round target and ramp +30 s per round for up to four rounds, then plateau.
+         */
         const val CUSTOM = "cus"
         const val CUSTOM_MAX_ROUNDS = 6
         const val CUSTOM_MIN_BREATHS = 10
         const val CUSTOM_MAX_BREATHS = 60
+        const val CUSTOM_DEFAULT_HOLD = 60
+        const val CUSTOM_MIN_HOLD = 15
+        const val CUSTOM_MAX_HOLD = 300
+        const val CUSTOM_HOLD_STEP = 15
 
-        fun custom(rounds: Int, breaths: Int): WimHofLevel {
+        fun custom(rounds: Int, breaths: Int, hold: Int = CUSTOM_DEFAULT_HOLD): WimHofLevel {
             val r = rounds.coerceIn(1, CUSTOM_MAX_ROUNDS)
             val b = breaths.coerceIn(CUSTOM_MIN_BREATHS, CUSTOM_MAX_BREATHS)
-            val holds = List(r) { minOf(60 + it * 30, 180) }
+            val h = hold.coerceIn(CUSTOM_MIN_HOLD, CUSTOM_MAX_HOLD)
+            val holds = List(r) { h + minOf(it, 4) * 30 }
             return WimHofLevel(CUSTOM, r, r, List(r) { b }, "$b", holds, holds.map { "%d:%02d".format(it / 60, it % 60) })
         }
 
-        fun resolve(id: String, customRounds: Int, customBreaths: Int) =
-            if (id == CUSTOM) custom(customRounds, customBreaths) else byId(id)
+        fun resolve(id: String, customRounds: Int, customBreaths: Int, customHold: Int) =
+            if (id == CUSTOM) custom(customRounds, customBreaths, customHold) else byId(id)
     }
 }
 

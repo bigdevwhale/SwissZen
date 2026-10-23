@@ -103,7 +103,7 @@ class BreatheViewModel(private val c: AppContainer) : ViewModel() {
     val settings = c.settings.settings.stateIn(viewModelScope, SharingStarted.Eagerly, AppSettings())
     fun setLevel(id: String, expertRounds: Int) = viewModelScope.launch { c.settings.setWimHof(id, expertRounds) }
     fun setTempo(inhale: Double, exhale: Double) = viewModelScope.launch { c.settings.setWimHofTempo(inhale, exhale) }
-    fun setCustom(rounds: Int, breaths: Int) = viewModelScope.launch { c.settings.setWimHofCustom(rounds, breaths) }
+    fun setCustom(rounds: Int, breaths: Int, hold: Int) = viewModelScope.launch { c.settings.setWimHofCustom(rounds, breaths, hold) }
     fun log(kind: String, startedAt: Long, seconds: Int, detail: String?) = viewModelScope.launch {
         if (seconds >= 20) c.db.sessions().insert(SessionLog(kind = kind, startedAt = startedAt, durationSec = seconds, detail = detail))
     }
@@ -327,8 +327,8 @@ private fun ColumnScope.GuidedPanel(g: GuidedState, vm: BreatheViewModel, settin
 fun levelName(id: String) = stringResource(when (id) { "med" -> R.string.wh_medium; "adv" -> R.string.wh_advanced; "exp" -> R.string.wh_expert; WimHofLevel.CUSTOM -> R.string.wh_custom; else -> R.string.wh_beginner })
 
 @Composable
-private fun WimHofSetup(settings: AppSettings, onPick: (String, Int) -> Unit, onCustom: (Int, Int) -> Unit, onTempo: (Double, Double) -> Unit, onStart: () -> Unit) {
-    val level = WimHofLevel.resolve(settings.whLevel, settings.whCustomRounds, settings.whCustomBreaths)
+private fun WimHofSetup(settings: AppSettings, onPick: (String, Int) -> Unit, onCustom: (Int, Int, Int) -> Unit, onTempo: (Double, Double) -> Unit, onStart: () -> Unit) {
+    val level = WimHofLevel.resolve(settings.whLevel, settings.whCustomRounds, settings.whCustomBreaths, settings.whCustomHold)
     val rounds = if (level.id == "exp") settings.whExpertRounds else level.defaultRounds
 
     Text(stringResource(R.string.wh_intro), style = ZenType.Muted, modifier = Modifier.padding(start = 2.dp, end = 2.dp, bottom = 12.dp))
@@ -341,8 +341,8 @@ private fun WimHofSetup(settings: AppSettings, onPick: (String, Int) -> Unit, on
             }
         }
     }
-    CustomCard(level.id == WimHofLevel.CUSTOM, settings.whCustomRounds, settings.whCustomBreaths,
-        onPick = { onCustom(settings.whCustomRounds, settings.whCustomBreaths) }, onChange = onCustom)
+    CustomCard(level.id == WimHofLevel.CUSTOM, settings.whCustomRounds, settings.whCustomBreaths, settings.whCustomHold,
+        onPick = { onCustom(settings.whCustomRounds, settings.whCustomBreaths, settings.whCustomHold) }, onChange = onCustom)
     Row(Modifier.padding(start = 4.dp, end = 4.dp, top = 4.dp)) {
         ZIconView(ZIcons.Shield, Zen.Faint, size = 16.dp, strokeWidth = 1.7f, modifier = Modifier.padding(top = 1.dp))
         Spacer(Modifier.width(8.dp))
@@ -404,9 +404,9 @@ private fun LevelCard(l: WimHofLevel, selected: Boolean, expertRounds: Int, modi
     }
 }
 
-/** The user's own preset: rounds and breaths per round, saved and selected on every change. */
+/** The user's own preset: rounds, breaths per round and first hold target, saved and selected on every change. */
 @Composable
-private fun CustomCard(selected: Boolean, rounds: Int, breaths: Int, onPick: () -> Unit, onChange: (Int, Int) -> Unit) {
+private fun CustomCard(selected: Boolean, rounds: Int, breaths: Int, hold: Int, onPick: () -> Unit, onChange: (Int, Int, Int) -> Unit) {
     val shape = Zen.RMd
     Box(
         Modifier
@@ -423,8 +423,10 @@ private fun CustomCard(selected: Boolean, rounds: Int, breaths: Int, onPick: () 
         Column(Modifier.fillMaxWidth()) {
             Text(stringResource(R.string.wh_custom), fontFamily = Inter, fontWeight = FontWeight.SemiBold, fontSize = 15.sp, letterSpacing = (-0.01).em, color = Zen.Ink)
             Text(stringResource(R.string.wh_custom_desc), style = ZenType.Muted.copy(fontSize = 12.5.sp), modifier = Modifier.padding(top = 3.dp, bottom = 4.dp))
-            CountRow(stringResource(R.string.wh_spec_rounds), rounds, 1, WimHofLevel.CUSTOM_MAX_ROUNDS, 1) { onChange(it, breaths) }
-            CountRow(stringResource(R.string.wh_spec_breaths), breaths, WimHofLevel.CUSTOM_MIN_BREATHS, WimHofLevel.CUSTOM_MAX_BREATHS, 5) { onChange(rounds, it) }
+            CountRow(stringResource(R.string.wh_spec_rounds), rounds, 1, WimHofLevel.CUSTOM_MAX_ROUNDS, 1) { onChange(it, breaths, hold) }
+            CountRow(stringResource(R.string.wh_spec_breaths), breaths, WimHofLevel.CUSTOM_MIN_BREATHS, WimHofLevel.CUSTOM_MAX_BREATHS, 5) { onChange(rounds, it, hold) }
+            CountRow(stringResource(R.string.wh_spec_hold), hold, WimHofLevel.CUSTOM_MIN_HOLD, WimHofLevel.CUSTOM_MAX_HOLD, WimHofLevel.CUSTOM_HOLD_STEP,
+                format = { "%d:%02d".format(it / 60, it % 60) }) { onChange(rounds, breaths, it) }
         }
         if (selected) Box(Modifier.align(Alignment.TopEnd).size(20.dp).background(Zen.Pine, CircleShape), contentAlignment = Alignment.Center) {
             ZIconView(ZIcons.Check, Zen.OnPine, size = 12.dp, strokeWidth = 3f)
@@ -433,11 +435,11 @@ private fun CustomCard(selected: Boolean, rounds: Int, breaths: Int, onPick: () 
 }
 
 @Composable
-private fun CountRow(label: String, value: Int, min: Int, max: Int, step: Int, onChange: (Int) -> Unit) {
+private fun CountRow(label: String, value: Int, min: Int, max: Int, step: Int, format: (Int) -> String = { "$it" }, onChange: (Int) -> Unit) {
     Row(Modifier.fillMaxWidth().padding(top = 8.dp), verticalAlignment = Alignment.CenterVertically) {
         Text(label, fontFamily = Inter, fontSize = 13.5.sp, color = Zen.Muted, modifier = Modifier.weight(1f))
         StepBtn(ZIcons.Minus, stringResource(R.string.wh_less, label)) { onChange((value - step).coerceIn(min, max)) }
-        Text("$value", fontFamily = Inter, fontWeight = FontWeight.SemiBold, fontSize = 14.5.sp, color = Zen.Pine,
+        Text(format(value), fontFamily = Inter, fontWeight = FontWeight.SemiBold, fontSize = 14.5.sp, color = Zen.Pine,
             textAlign = TextAlign.Center, modifier = Modifier.width(48.dp))
         StepBtn(ZIcons.Plus, stringResource(R.string.wh_more, label)) { onChange((value + step).coerceIn(min, max)) }
     }

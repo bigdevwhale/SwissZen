@@ -98,7 +98,7 @@ private fun WimHofSession(initial: AppSettings, onClose: () -> Unit) {
     val settings by vm.settings.collectAsStateWithLifecycle()
     val haptic = LocalHapticFeedback.current
     val engine = remember {
-        val level = WimHofLevel.resolve(initial.whLevel, initial.whCustomRounds, initial.whCustomBreaths)
+        val level = WimHofLevel.resolve(initial.whLevel, initial.whCustomRounds, initial.whCustomBreaths, initial.whCustomHold)
         WimHofEngine(level, if (level.id == "exp") initial.whExpertRounds else level.defaultRounds, initial.whInhale, initial.whExhale)
     }
     val startedAt = remember { System.currentTimeMillis() }

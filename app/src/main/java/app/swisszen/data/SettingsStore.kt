@@ -28,6 +28,7 @@ data class AppSettings(
     val whExhale: Double = WimHofEngine.DEFAULT_EXHALE,
     val whCustomRounds: Int = 3,
     val whCustomBreaths: Int = 30,
+    val whCustomHold: Int = WimHofLevel.CUSTOM_DEFAULT_HOLD,
 )
 
 class SettingsStore(private val context: Context) {
@@ -40,6 +41,7 @@ class SettingsStore(private val context: Context) {
         val whExhale = doublePreferencesKey("wh_exhale")
         val whCustomRounds = intPreferencesKey("wh_custom_rounds")
         val whCustomBreaths = intPreferencesKey("wh_custom_breaths")
+        val whCustomHold = intPreferencesKey("wh_custom_hold")
         val bellOn = booleanPreferencesKey("bell_on")
         val bellMode = stringPreferencesKey("bell_mode")
         val randMin = intPreferencesKey("bell_rand_min")
@@ -62,6 +64,7 @@ class SettingsStore(private val context: Context) {
             whExhale = p[K.whExhale] ?: WimHofEngine.DEFAULT_EXHALE,
             whCustomRounds = p[K.whCustomRounds] ?: 3,
             whCustomBreaths = p[K.whCustomBreaths] ?: 30,
+            whCustomHold = p[K.whCustomHold] ?: WimHofLevel.CUSTOM_DEFAULT_HOLD,
         )
     }
 
@@ -92,8 +95,9 @@ class SettingsStore(private val context: Context) {
         it[K.whInhale] = inhale; it[K.whExhale] = exhale
     }
     /** Saves the custom preset and makes it the selected level. */
-    suspend fun setWimHofCustom(rounds: Int, breaths: Int) = context.dataStore.edit {
-        it[K.whCustomRounds] = rounds; it[K.whCustomBreaths] = breaths; it[K.whLevel] = WimHofLevel.CUSTOM
+    suspend fun setWimHofCustom(rounds: Int, breaths: Int, hold: Int) = context.dataStore.edit {
+        it[K.whCustomRounds] = rounds; it[K.whCustomBreaths] = breaths; it[K.whCustomHold] = hold
+        it[K.whLevel] = WimHofLevel.CUSTOM
     }
 
     suspend fun updateBell(transform: (BellConfig) -> BellConfig): BellConfig {
