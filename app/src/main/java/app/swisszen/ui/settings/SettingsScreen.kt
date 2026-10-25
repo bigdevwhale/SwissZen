@@ -46,6 +46,7 @@ import app.swisszen.bell.BellAlarms
 import app.swisszen.data.AppSettings
 import app.swisszen.ui.Language
 import app.swisszen.ui.ThemeMode
+import app.swisszen.ui.components.CommunityLinks
 import app.swisszen.ui.components.RoundIconButton
 import app.swisszen.ui.components.SectionHeader
 import app.swisszen.ui.components.ZIcons
@@ -112,6 +113,8 @@ fun SettingsScreen(onBack: () -> Unit) {
                 style = ZenType.Muted,
             )
         }
+
+        CommunityLinks()
 
         SectionHeader(stringResource(R.string.settings_about))
         ZenCard(Modifier.fillMaxWidth()) {
